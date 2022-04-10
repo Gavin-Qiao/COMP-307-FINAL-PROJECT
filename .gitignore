@@ -1,6 +1,6 @@
 .idea/
 *.iml
 out/
-SQLiteStudio/
 Backend/toy.db
 README_template.md
+/SQLiteStudio/
