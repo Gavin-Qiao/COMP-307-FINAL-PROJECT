@@ -2,5 +2,5 @@
 
 class LoginManager extends DatabaseDriver
 {
-    
+
 }
