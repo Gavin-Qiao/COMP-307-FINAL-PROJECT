@@ -1,0 +1,115 @@
+<html>
+
+<style>
+
+@import 'https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300';
+
+/*
+ FORMATTING FOR CODEPEN
+*/
+
+html,body {
+  background-image: url("mcgill_bckgrnd_1.jpeg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: 100% 100%;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  font-family: 'Open Sans Condensed', sans-serif;
+}
+
+.col {
+  margin-top: 200px;
+  height: 100%;
+}
+
+div[class*=container] {
+  text-align: center;
+  width: 100%;
+  height: 256px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container { background: rgba(155, 0, 0, 0.9);}
+
+/*
+ BUTTON STYLING
+*/
+
+.btn {
+  position: relative;
+  color: white;
+  width: 256px;
+  height: 64px;
+  line-height: 64px;
+  transition: all 0.3s;
+  span {
+    transition: all 0.3s;
+    tranform: scale(1, 1);
+  }
+}
+
+.btn::before, .btn::after {
+  content: '';
+  position: absolute;
+  transition: all 0.3s;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* Red Button */
+
+.btn-four:hover span {
+  transform: scale(1.2, 1.2);
+}
+
+.btn-four::before {
+  opacity: 0;
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(0.1, 0.1);
+}
+
+.btn-four:hover::before {
+  opacity: 1;
+  transform: scale(1, 1);
+}
+
+.btn-four::after {
+  transition: all 0.3s;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.btn-four:hover::after {
+  transform: scale(0, 0);
+  opacity: 0;
+}
+
+
+
+
+</style>
+
+<body>
+
+<div class="col">
+  <div class="container">
+    <div class="btn btn-four">
+      <span>BUTTON FOUR</span>
+    </div>
+  </div>
+</div>
+
+
+</body>
+
+
+</html>
