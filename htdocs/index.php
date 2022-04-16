@@ -13,12 +13,15 @@ function display($path)
 
 //if (sizeof($_GET)==0)
 //{
-	display("HTDOCS/MATTER/CONTENT/top-of-all-files.txt");
-	display("HTDOCS/MATTER/CONTENT/login-style.txt");
-	display("HTDOCS/MATTER/CONTENT/top-of-all-bodys.txt");
-	display("HTDOCS/MATTER/CONTENT/header.txt");
-	display("HTDOCS/MATTER/CONTENT/login-body.txt");
-	display("HTDOCS/MATTER/CONTENT/bottom-of-all-files.txt");
+	//display("HTDOCS/MATTER/CONTENT/top-of-all-files.txt");
+	//display("HTDOCS/MATTER/CONTENT/login-style.txt");
+	//display("HTDOCS/MATTER/CONTENT/top-of-all-bodys.txt");
+	//display("HTDOCS/MATTER/CONTENT/header.txt");
+	//display("HTDOCS/MATTER/CONTENT/login-body.txt");
+	//display("HTDOCS/MATTER/CONTENT/bottom-of-all-files.txt");
 //}
+
+display("src/front-end/index.html");
+//display("index.html");
 
 ?>
