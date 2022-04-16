@@ -14,6 +14,8 @@ finction display($path)
 
 if (sizeof($_GET)==0) ; //print student
 
+// REPLACE WITH THIS: foreach ($_GET as $key => $value) { }
+
 for ($i = 0;$i<sizeof($_GET);$i++)
 {
 
