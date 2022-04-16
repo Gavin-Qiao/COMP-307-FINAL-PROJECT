@@ -138,7 +138,7 @@ class UserManagement extends DatabaseDriver
             // Execute
             $statement -> execute([$username]);
 
-            return $statement->fetchAll(\PDO::FETCH_ASSOC)['USER_ID'];
+            return $statement->fetchAll(\PDO::FETCH_ASSOC)[0]['USER_ID'];
         }
         catch (Exception $e)
         {

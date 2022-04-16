@@ -23,7 +23,7 @@ class SQL_STATEMENTS
     ==========================================
      */
 
-    public const GET_ID_BY_USERNAME      = "SELECT USER_ID FROM USER WHERE USER_NAME = ?;";
+    public const GET_ID_BY_USERNAME      = "SELECT USER_ID  FROM USER WHERE USER_NAME = ?;";
 
     public const COUNT_USER_EMAIL        = "SELECT COUNT(*) FROM USER WHERE EMAIL     = ?;";
 
