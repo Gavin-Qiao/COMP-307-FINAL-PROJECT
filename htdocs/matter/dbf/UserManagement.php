@@ -94,7 +94,7 @@ class UserManagement extends DatabaseDriver
                 }
                 case "username":
                 {
-                    $statement = $conn -> prepare($statement_library::COUNT_USER_NAME);
+                    $statement = $conn -> prepare($statement_library::COUNT_USERNAME);
                     break;
                 }
                 default:
@@ -111,6 +111,41 @@ class UserManagement extends DatabaseDriver
         {
             echo $e->getMessage();
             return -11;
+        }
+    }
+
+
+    /**
+     * Given username, query for corresponding userID.
+     * @param  String $username
+     * @return String userID (e.g., 260927119)
+     * <p> "Username not found" if username is not in the system</p>
+     */
+    function Get_UserID(String $username) : String
+    {
+        // Verify username
+        if ($this->Count_User("username", $username) != 1)
+            return "Username not found"; // Username not found
+
+        try
+        {
+            // Get connection
+            $conn = $this->get_connection();
+
+            // Get statement library
+            $statement_library = new SQL_STATEMENTS();
+
+            // Prepare statement
+            $statement = $conn -> prepare($statement_library::GET_ID_BY_USERNAME);
+
+            // Execute
+            $statement -> execute([$username]);
+
+            return $statement->fetchAll(\PDO::FETCH_ASSOC)[0]['USER_ID'];
+        }
+        catch (Exception $e)
+        {
+            return $e->getMessage();
         }
     }
 
