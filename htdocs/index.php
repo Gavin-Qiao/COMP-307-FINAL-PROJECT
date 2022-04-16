@@ -21,7 +21,7 @@ function display($path)
 	//display("MATTER/CONTENT/bottom-of-all-files.txt");
 //}
 
-display("src/front-end/index.html");
-//display("index.html");
+display("src/front-end/login.html");
+//display("login.html");
 
 ?>

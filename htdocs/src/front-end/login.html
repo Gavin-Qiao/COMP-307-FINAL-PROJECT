@@ -254,6 +254,8 @@ a {
 
 <div class="col">
 
+<img src onerror="getErrorCode()">
+
 <!-- Header --->
   <div class="container" style="height:150px;background: rgba(255, 255, 255, 0);"> 
 
@@ -263,14 +265,14 @@ a {
 
   </div>
 
-<div class="container" style="height:50px ;background: rgba(0, 0, 0, 0);"> <h2 style="color:red;background: rgba(255,255,255,0.75);">  <h2> </div>
+<div class="container" style="height:50px ;background: rgba(0, 0, 0, 0);"> <h2 id="error" style="color:red;background: rgba(255,255,255,0.75);">  <h2> </div>
 <!-- Error: This is an invalid account. Please try again. --->
 
 <!-- End of header --->
 
   <div class="container" style="height:335px;">
 
-<form id="form" action="login-result.php" method="GET" class="login">
+<form id="form" action="login.php" method="POST" class="login">
   <input type="text" placeholder="Username" name="username">
   <input type="password" placeholder="Password" name="pass">
   <button type="submit">Login</button>
@@ -289,7 +291,12 @@ a {
 
 </div>
 
-<script>
+<script type="text/javascript">
+  function getErrorCode()
+  {
+	var errcode = '<%=Session["errCode"]%>'
+	document.getElementById('error').innerHTML = errcode;
+  }
 </script>
 
 </body>
