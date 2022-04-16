@@ -1,8 +1,8 @@
 <?php
 
-require 'utilities.php';
-require '../../matter/dbf/UserManagement.php';
-require '../../matter/dbf/CourseManagement.php';
+require_once 'utilities.php';
+require_once '../../matter/dbf/UserManagement.php';
+require_once '../../matter/dbf/CourseManagement.php';
 
 $username = "";
 $password = "";
