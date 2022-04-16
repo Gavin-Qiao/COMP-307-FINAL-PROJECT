@@ -1,5 +1,8 @@
 <?php
 
+require_once 'DatabaseDriver.php';
+require_once 'SQL_STATEMENTS.php';
+
 class UserManagement extends DatabaseDriver
 {
     /**
