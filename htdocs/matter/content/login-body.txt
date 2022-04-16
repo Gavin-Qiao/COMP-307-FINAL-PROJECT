@@ -1,0 +1,20 @@
+  <div class="container" style="height:335px;">
+
+<form id="form" action="login-result.php" method="GET" class="login">
+  <input type="text" placeholder="Username" name="username">
+  <input type="password" placeholder="Password" name="pass">
+  <button type="submit">Login</button>
+</form>
+
+  </div>
+
+
+  <div class="container" style="margin-left:37%; width:25%; margin-top:25px; height:100px;background: rgba(0, 0, 0, 0);">  
+
+<div class="btn btn-four" style="background: rgba(175, 0, 0, 0.9);">
+<span> REGISTER </span>
+</div>
+ 
+  </div>
+
+</div>
