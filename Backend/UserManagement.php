@@ -434,9 +434,8 @@ class UserManagement extends DatabaseDriver
 
     /** TODO: MODIFY ACCORDING TO TA, STUDENT AND INSTRUCTOR TABLE
      * Verify if given user has given identity.
-     * @param String $role       choosing between "student", "ta", "instructor", "sysop" and "admin"
-     * @param String $userID
-     * @param array  $extra_info extra information based on table
+     * @param  String $role choosing between "student", "ta", "instructor", "sysop" and "admin"
+     * @param  String $userID
      * @return int
      * <p>errCode: Result of registration                                                </p>
      * <ul>
@@ -445,14 +444,9 @@ class UserManagement extends DatabaseDriver
      * <li>-6:  Already registered as role!                                              </li>
      * <li>-8:  Supervisor name too long!                                                </li>
      * <li>-11: Unknown SQL error or unknown property. (See echo)                        </li>
-     * <li>-21: Incorrect education choice: should be between 'grad', 'ugrad' and 'other </li>
-     * <li>-22: Location too long! Should be less than 256 characters                    </li>
-     * <li>-23: Phone number too long! Should be less than 30 characters                 </li>
-     * <li>-24: Negative degree                                                          </li>
      * </ul>
-     * @see UserManagement::Register_As_TA()
      */
-    function Register_As(String $role, String $userID, array $extra_info = []) : int
+    function Register_As(String $role, String $userID) : int
     {
         try
         {
@@ -479,10 +473,8 @@ class UserManagement extends DatabaseDriver
                 }
                 case "ta":
                 {
-                    if (sizeof($extra_info) !== 7)
-                        return $this->Register_As_TA($userID);
-                    return $this->Register_As_TA($userID, $extra_info[0], $extra_info[1], $extra_info[2], $extra_info[3],
-                                                          $extra_info[4], $extra_info[5], $extra_info[6]);
+                    $statement = $conn->prepare($statement_library::REGISTER_AS_TA);
+                    break;
                 }
                 case "instructor":
                 {
@@ -516,83 +508,6 @@ class UserManagement extends DatabaseDriver
         }
     }
 
-
-    /**
-     * Complete version of registering a TA
-     * @param  String $userID
-     * @param  String $Education  Choose between 'grad', 'ugrad' and 'other'
-     * @param  String $Supervisor Full name. Less than 512 characters.
-     * @param  bool   $Priority   boolean
-     * @param  String $Location   Address. Less than 256 characters.
-     * @param  String $Phone      Phone number. Less than 30 characters.
-     * @param  int    $Degree     Non-negative number
-     * @param  bool   $Open       boolean
-     * @return int
-     * <p>errCode: Result of registration                                                </p>
-     * <li>-8:  Supervisor name too long!                                                </li>
-     * <li>-21: Incorrect education choice: should be between 'grad', 'ugrad' and 'other </li>
-     * <li>-22: Location too long! Should be less than 256 characters                    </li>
-     * <li>-23: Phone number too long! Should be less than 30 characters                 </li>
-     * <li>-24: Negative degree                                                          </li>
-     * @see UserManagement::Register_As()
-     */
-    function Register_As_TA(String $userID,
-                            String $Education  = "other",
-                            String $Supervisor = "unknown",
-                            bool   $Priority   = false,
-                            String $Location   = "unknown",
-                            String $Phone      = "unknown",
-                            int    $Degree     = 0,
-                            bool   $Open       = false
-                           ): int
-    {
-        // Verify if already registered
-        $cmgt    = new CourseManagement($this->get_database_path());
-        $errCode = $cmgt->Verify_Identity("ta", $userID);
-        if ($errCode == 0)   return -6;       // Already registered!
-        if ($errCode != -12) return $errCode; // Some error occurred
-        unset($cmgt);
-
-        // Verify education
-        if (!preg_match("/[gard]|[ugrad]|[other]/", $Education))
-            return -21; // Incorrect education choice: should be between 'grad', 'ugrad' and 'other'
-
-        // Verify Supervisor
-        if (strlen($Supervisor) > 512)
-            return -8; // Supervisor name too long! Should be less than 512 characters
-
-        // Verify Location
-        if (strlen($Location) > 256)
-            return -22; // Location too long! Should be less than 256 characters
-
-        // Verify Phone
-        if (strlen($Phone) > 30)
-            return -23; // Phone number too long! Should be less than 30 characters
-
-        // Verify Degree
-        if ($Degree < 0)
-            return -24; // Negative degree.
-
-        try
-        {
-            // Create connection
-            $conn = $this->get_connection();
-
-            // Create statement
-            $statement_library = new SQL_STATEMENTS();
-            $statement         = $conn->prepare($statement_library::REGISTER_AS_TA);
-
-            // Execute
-            $statement -> execute([$userID, $Education, $Supervisor, $Priority, $Location, $Phone, $Degree, $Open]);
-
-            return 0;
-        }
-        catch (Exception $e)
-        {
-            echo $e->getMessage();
-            return -11;
-        }
-    }
 
     /**
      * Delete a user from USER (and from related tables)

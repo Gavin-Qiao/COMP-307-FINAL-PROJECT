@@ -2,11 +2,47 @@
 
 class CourseManagement extends DatabaseDriver
 {
+
+    /**
+     * Decode CID to TERM_YEAR and COURSE_NUM
+     * @param String $CourseID e.g., WINTER2022_COMP307
+     * @return array e.g., [[TERM_YEAR] => WINTER2022, [COURSE_NUM] => COMP307]
+     */
+    function Decode_CourseID(String $CourseID): array
+    {
+        if (empty($CourseID) || !str_contains($CourseID, "_"))
+            return array();
+
+        $expose_course = explode("_", $CourseID);
+        return
+        [
+            "TERM_YEAR"   => $expose_course[0],
+            "COURSE_NUM"  => $expose_course[1]
+        ];
+    }
+
+    /**
+     * Encode CID from TERM_YEAR and COURSE_NUM
+     * @param String $term e.g., WINTER2022
+     * @param String $num  e.g., COMP307
+     * @return String e.g., WINTER2022_COMP307
+     */
+    function Encode_CourseID(String $term, String $num): String
+    {
+        return $term.'_'.$num;
+    }
+
+
+
     /** TODO: ADD 'SINCE' (probably)
      * Query the database to get all the courses related to the given user.
      * @param  String $userID
      * @return array
-     * <p> array['CNUM', 'CTERM']                 </p>
+     * [                                           <br>
+     * &nbsp;[COURSE_TITLE] => Title of the course <br>
+     * &nbsp;[COURSE_NUM]   => e.g., COMP308       <br>
+     * &nbsp;[TERM_YEAR]    => e.g., WINTER2022    <br>
+     * ]
      * <p> []: no record found or some exceptions </p>
      */
     function Get_Courses(String $userID): array
@@ -28,13 +64,18 @@ class CourseManagement extends DatabaseDriver
             $statement->execute([$userID, $userID, $userID]);
 
             $courses = [];
+            $c_query = $conn->prepare($statement_library::GET_COURSE_TITLE);
             while ($row = $statement->fetch(\PDO::FETCH_ASSOC))
             {
+                $cid = $row['CID'];
+                $c_query->execute([$row['CID']]);
+                $cid_decode = $this->Decode_CourseID($cid);
                 $courses[] =
-                    [
-                        'CNUM'  => $row['CNUM' ],
-                        'CTERM' => $row['CTERM'],
-                    ];
+                [
+                    'COURSE_TITLE' => $c_query->fetch(\PDO::FETCH_ASSOC)['COURSE_TITLE'],
+                    'COURSE_NUM'   => $cid_decode['COURSE_NUM'],
+                    'TERM_YEAR'    => $cid_decode['TERM_YEAR']
+                ];
             }
             return $courses;
         }
@@ -79,7 +120,25 @@ class CourseManagement extends DatabaseDriver
                 case 'ta':
                 {
                     $statement = $conn->prepare($statement_library::FIND_TA_COURSE);
-                    break;
+                    $statement->execute([$userID]);
+                    $courses = [];
+                    $c_query = $conn->prepare($statement_library::GET_COURSE_TITLE);
+                    while ($row = $statement->fetch(\PDO::FETCH_ASSOC))
+                    {
+                        $cid = $row['CID'];
+                        $c_query->execute([$row['CID']]);
+                        $cid_decode = $this->Decode_CourseID($cid);
+                        $courses[] =
+                            [
+                                'COURSE_TITLE' => $c_query->fetch(\PDO::FETCH_ASSOC)['COURSE_TITLE'],
+                                'COURSE_NUM'   => $cid_decode['COURSE_NUM'],
+                                'TERM_YEAR'    => $cid_decode['TERM_YEAR' ],
+                                'SINCE'        => $row       ['SINCE'     ],
+                                'HOURS'        => $row       ['HOURS'     ],
+                                'NOTE'         => $row       ['NOTE']
+                            ];
+                    }
+                    return $courses;
                 }
                 case 'instructor':
                 {
@@ -97,13 +156,19 @@ class CourseManagement extends DatabaseDriver
             $statement->execute([$userID]);
 
             $courses = [];
+            $c_query = $conn->prepare($statement_library::GET_COURSE_TITLE);
             while ($row = $statement->fetch(\PDO::FETCH_ASSOC))
             {
+                $cid = $row['CID'];
+                $c_query->execute([$row['CID']]);
+                $cid_decode = $this->Decode_CourseID($cid);
                 $courses[] =
-                    [
-                        'CNUM'  => $row['CNUM' ],
-                        'CTERM' => $row['CTERM'],
-                    ];
+                [
+                    'COURSE_TITLE' => $c_query->fetch(\PDO::FETCH_ASSOC)['COURSE_TITLE'],
+                    'COURSE_NUM'   => $cid_decode['COURSE_NUM'],
+                    'TERM_YEAR'    => $cid_decode['TERM_YEAR' ],
+                    'SINCE'        => $row       ['SINCE']
+                ];
             }
             return $courses;
         }
@@ -165,6 +230,75 @@ class CourseManagement extends DatabaseDriver
         }
     }
 
+    /** Update course information
+     * @param  String $num       e.g., COMP307
+     * @param  String $term      e.g., WINTER2022
+     * @param  String $property  choosing between 'title', 'num' and 'term'
+     * @param  String $new_value
+     * @return int
+     * <p> errCode of the update                                                            </p>
+     * <ul>
+     * <li>  0: Success                                                                    </li>
+     * <li>-11: Unknown SQL error. (See echo)                                              </li>
+     * <li>-14: Invalid course_num format: /^[A-Z]{4}[0-9]{3}$/ expected!                  </li>
+     * <li>-15: Invalid course_num format: /^((WINTER)|(SUMMER)|(FALL))[0-9]{4}/ expected! </li>
+     * </ul>
+     */
+    function Update_Course(String $num, String $term, String $property, String $new_value) : int
+    {
+        // Verify course_num
+        $num = strtoupper($num);
+        if (empty($num) || !preg_match("/^[A-Z]{4}[0-9]{3}$/", $num))
+            return -14; // Invalid course_num format: /^[A-Z]{4}[0-9]{3}$/ expected!
+
+        // Verify course_term
+        $term = strtoupper($term);
+        if(empty($term) || !preg_match("/^((WINTER)|(SUMMER)|(FALL))[0-9]{4}/", $term))
+            return -15; // Invalid course_num format: /^((WINTER)|(SUMMER)|(FALL))[0-9]{4}/ expected!
+
+        try
+        {
+            // Create connection
+            $conn = $this->get_connection();
+
+            // Create statement
+            $statement_library = new SQL_STATEMENTS();
+
+            switch ($property)
+            {
+                case 'title':
+                {
+                    $statement = $conn -> prepare($statement_library::UPDATE_COURSE_TITLE);
+                    break;
+                }
+                case 'num':
+                {
+                    $statement = $conn -> prepare($statement_library::UPDATE_COURSE_NUM);
+                    break;
+                }
+                case 'term':
+                {
+                    $statement = $conn -> prepare($statement_library::UPDATE_COURSE_TERM);
+                    break;
+                }
+                default:
+                {
+                    echo "Unknown property: ".$property.PHP_EOL;
+                    return -11;
+                }
+            }
+            // Execute
+            $statement->execute([$new_value, $this->Encode_CourseID($term, $num)]);
+
+            return $statement->fetchColumn();
+        }
+        catch (Exception $e)
+        {
+            echo $e->getMessage();
+            return -11;
+        }
+    }
+
     /** Count number of courses matching given course_number and course_term
      * @param String $num
      * @param String $term
@@ -176,7 +310,7 @@ class CourseManagement extends DatabaseDriver
      * <li>-15: Invalid course_num format: /^((WINTER)|(SUMMER)|(FALL))[0-9]{4}/ expected! </li>
      * </ul>
      */
-    function Course_Count(String $num, String $term): int
+    function Count_Course(String $num, String $term): int
     {
         // Verify course_num
         $num = strtoupper($num);
@@ -239,7 +373,7 @@ class CourseManagement extends DatabaseDriver
     function Register_To_Course(String $userID, String $role, String $num, String $term, String $date="null", array $extra_info = []) : int
     {
         // Verify course existence
-        $errCode = $this->Course_Count($num, $term);
+        $errCode = $this->Count_Course($num, $term);
 
         if($errCode == 0) return -16;       // Course doesn't exist!
         if($errCode <  0) return $errCode;  // Error with $num or $term
@@ -274,9 +408,8 @@ class CourseManagement extends DatabaseDriver
                 }
                 case "ta":
                 {
-                    if (sizeof($extra_info) !== 2)
-                        return $this->Register_TA_To_Course($userID, $num, $term, $date);
-                    return $this->Register_TA_To_Course($userID, $num, $term, $date, $extra_info[0], $extra_info[1]);
+                    $statement = $conn->prepare($statement_library::REGISTER_TA_COURSE);
+                    break;
                 }
                 case "instructor":
                 {
@@ -286,7 +419,7 @@ class CourseManagement extends DatabaseDriver
             }
 
             // Execute
-            $statement->execute([$userID, $num, $term, $date]);
+            $statement->execute([$userID, $this->Encode_CourseID($term, $num), $date]);
             return 0;
         }
         catch (Exception $e)
@@ -299,59 +432,8 @@ class CourseManagement extends DatabaseDriver
 
 
     /**
-     * @param String $tid
-     * @param String $num
-     * @param String $term
-     * @param String $date
-     * @param int    $hours (hours / 180) : non-negative integer
-     * @param String $Note  less than 1024 characters
-     * @return int
-     * <p> ErrCode of registration                                                         </p>
-     * <ul>
-     * <li>  0: Success                                                                    </li>
-     * <li>-24: Negative degree/hour                                                       </li>
-     * <li>-25: Note too long! Should be less than 1024 characters                         </li>
-     * </ul>
-     * @see CourseManagement::Register_To_Course()
-     */
-    function Register_TA_To_Course(String $tid, String $num, String $term, String $date,
-                                   int    $hours = 0,
-                                   String $Note  = ""
-                                  ) : int
-    {
-        // Verify hours
-        if ($hours < 0)
-            return -24;  // Negative hour
-
-        // Verify note
-        if (strlen($Note) > 1024)
-            return -25; // Note too long! Should be less than 1024 characters
-
-        try
-        {
-            // Get connection
-            $conn = $this->get_connection();
-
-            // Get statements
-            $statement_library = new SQL_STATEMENTS();
-            $statement = $conn->prepare($statement_library::REGISTER_TA_COURSE);
-
-            // Execute
-            $statement -> execute([$tid, $num, $term, $date, $hours, $Note]);
-
-            return 0;
-        }
-        catch (Exception $e)
-        {
-            echo $e->getMessage();
-            return -11;
-        }
-
-    }
-
-    /**
      * Verify if given user has given identity.
-     * @param  String $identity choosing between 'student', 'ta', 'instructor', 'sysop' and 'admin'
+     * @param  String $identity choosing between 'student', 'ta', 'instructor', 'sysop', 'admin'
      * @param  String $userID
      * @return int
      * <p>errCode: Result of verifying                              </p>
@@ -438,7 +520,7 @@ class CourseManagement extends DatabaseDriver
     function Delete_Course(String $num, String $term) : int
     {
         // Verify course existence
-        $errCode = $this->Course_Count($num, $term);
+        $errCode = $this->Count_Course($num, $term);
 
         if($errCode == 0) return -16;       // Course doesn't exist!
         if($errCode <  0) return $errCode;  // Error with $num or $term
@@ -485,7 +567,7 @@ class CourseManagement extends DatabaseDriver
     function Verify_In_Course(String $userID, String $role, String $num, String $term): int
     {
         // Verify course existence
-        $errCode = $this->Course_Count($num, $term);
+        $errCode = $this->Count_Course($num, $term);
 
         if($errCode == 0) return -16;       // Course doesn't exist!
         if($errCode <  0) return $errCode;  // Error with $num or $term
@@ -523,7 +605,7 @@ class CourseManagement extends DatabaseDriver
             }
 
             // Execute
-            $statement->execute([$userID, $num, $term]);
+            $statement->execute([$userID, $this->Encode_CourseID($term, $num)]);
             return $statement->fetchColumn() == 0 ? -18 : 0;
         }
         catch (Exception $e)
@@ -580,7 +662,7 @@ class CourseManagement extends DatabaseDriver
             $statement         = $conn->prepare($statement_library::RATE_TA);
 
             // Execute
-            $statement->execute([$num, $term, $sid, $tid, $rating, $msg]);
+            $statement->execute([$this->Encode_CourseID($term, $num), $sid, $tid, $rating, $msg]);
             return 0;
         }
         catch (Exception $e)
@@ -588,5 +670,124 @@ class CourseManagement extends DatabaseDriver
             echo $e -> getMessage();
             return -11;
         }
+    }
+
+    /**
+     * Add an instructor log to the database
+     * @param String $cid      courseID (e.g., WINTER2022_COMP307)
+     * @param String $iid      userID of instructor
+     * @param String $tid      userID of TA
+     * @param String $msg      instructor note on TA (maximum 1024 characters long)
+     * @param bool   $wishlist whether TA has been added to professor's wishlist
+     * @return int
+     * <p> ErrCode of adding log                                                           </p>
+     * <ul>
+     * <li> 0:  Success                                                                    </li>
+     * <li>-5:  Incorrect userID format: should be 9 digits                                </li>
+     * <li>-11: Unknown SQL error or unknown property. (See echo)                          </li>
+     * <li>-12: tid or iid mismatch                                                        </li>
+     * <li>-14: Invalid course_num format: /^[A-Z]{4}[0-9]{3}$/ expected!                  </li>
+     * <li>-15: Invalid course_num format: /^((WINTER)|(SUMMER)|(FALL))[0-9]{4}/ expected! </li>
+     * <li>-20: Incorrect message length: should be less than 1024 characters!             </li>
+     * </ul>
+     * @see CourseManagement::Verify_Identity()
+     * @see CourseManagement::Count_Course()
+     * @see CourseManagement::Decode_CourseID()
+     */
+    private function Update_TA_Log(String $cid, String $iid, String $tid, String $msg, bool $wishlist): int
+    {
+        // ID verification
+        $errCode = $this->Verify_Identity("instructor", $iid);
+        if ($errCode != 0)
+            return $errCode; // $iid doesn't match an instructor
+
+        $errCode = $this->Verify_Identity("ta",         $tid);
+        if ($errCode != 0)
+            return $errCode; // $tid doesn't match a TA
+
+        $decode  = $this-> Decode_CourseID($cid);
+        $num     = $decode[1];
+        $term    = $decode[0];
+        $errCode = $this->Count_Course($num, $term);
+
+        if ($errCode != 1)
+            return $errCode; // $cid doesn't match a course
+
+        // Msg verification
+        if (strlen($msg))
+            return -20;      // Incorrect message length: should be less than 1024 characters!
+
+        try
+        {
+            // Get connection
+            $conn = $this->get_connection();
+
+            // Get statements
+            $statement_library = new SQL_STATEMENTS();
+            $statement         = $conn->prepare($statement_library::INSTRUCTOR_LOG);
+
+            // Execute
+            $statement->execute([$cid, $iid, $tid, $msg, $wishlist]);
+            return 0;
+        }
+        catch (Exception $e)
+        {
+            echo $e -> getMessage();
+            return -11;
+        }
+    }
+
+    /**
+     * Add an instructor log to the database
+     * @param String $cid      courseID (e.g., WINTER2022_COMP307)
+     * @param String $iid      userID of instructor
+     * @param String $tid      userID of TA
+     * @param String $msg      instructor note on TA (maximum 1024 characters long)
+     * @param bool   $wishlist whether TA has been added to professor's wishlist
+     * @return int
+     * <p> ErrCode of adding log                                                           </p>
+     * <ul>
+     * <li> 0:  Success                                                                    </li>
+     * <li>-5:  Incorrect userID format: should be 9 digits                                </li>
+     * <li>-11: Unknown SQL error or unknown property. (See echo)                          </li>
+     * <li>-12: tid or iid mismatch                                                        </li>
+     * <li>-14: Invalid course_num format: /^[A-Z]{4}[0-9]{3}$/ expected!                  </li>
+     * <li>-15: Invalid course_num format: /^((WINTER)|(SUMMER)|(FALL))[0-9]{4}/ expected! </li>
+     * <li>-20: Incorrect message length: should be less than 1024 characters!             </li>
+     * </ul>
+     * @see CourseManagement::Verify_Identity()
+     * @see CourseManagement::Count_Course()
+     * @see CourseManagement::Decode_CourseID()
+     */
+    function Instructor_Log(String $cid, String $iid, String $tid, String $msg, bool $wishlist = false) : int
+    {
+        return $this->Update_TA_Log($cid, $iid, $tid, $msg, $wishlist);
+    }
+
+    /**
+     * Add an instructor log to the database
+     * @param String $cid      courseID (e.g., WINTER2022_COMP307)
+     * @param String $iid      userID of instructor
+     * @param String $tid      userID of TA
+     * @param String $msg      instructor note on TA (maximum 1024 characters long)
+     * @param bool   $wishlist whether TA has been added to professor's wishlist
+     * @return int
+     * <p> ErrCode of adding log                                                           </p>
+     * <ul>
+     * <li> 0:  Success                                                                    </li>
+     * <li>-5:  Incorrect userID format: should be 9 digits                                </li>
+     * <li>-11: Unknown SQL error or unknown property. (See echo)                          </li>
+     * <li>-12: tid or iid mismatch                                                        </li>
+     * <li>-14: Invalid course_num format: /^[A-Z]{4}[0-9]{3}$/ expected!                  </li>
+     * <li>-15: Invalid course_num format: /^((WINTER)|(SUMMER)|(FALL))[0-9]{4}/ expected! </li>
+     * <li>-20: Incorrect message length: should be less than 1024 characters!             </li>
+     * </ul>
+     * @see CourseManagement::Verify_Identity()
+     * @see CourseManagement::Count_Course()
+     * @see CourseManagement::Decode_CourseID()
+     */
+    function Update_Wishlist(String $cid, String $iid, String $tid, String $msg = "Add to wishlist", bool $wishlist = false): int
+    {
+        return $this->Update_TA_Log($cid, $iid, $tid, $msg, $wishlist);
     }
 }

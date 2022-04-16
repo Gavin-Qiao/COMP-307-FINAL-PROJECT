@@ -60,17 +60,15 @@ class SQL_STATEMENTS
 
     public const COUNT_USER_ADMIN        = "SELECT COUNT(*) FROM USER U JOIN ADMIN      A on U.USER_ID = A.ID WHERE A.ID = ?;";
 
-    public const REGISTER_AS_STUDENT     = "INSERT INTO STUDENT(ID) VALUES (?)";
+    public const REGISTER_AS_STUDENT     = "INSERT INTO STUDENT   (ID) VALUES (?)";
 
-    public const REGISTER_AS_TA          = "INSERT INTO 
-                                            TA(ID, EDUCATION, SUPERVISOR, PRIORITY, LOCATION, PHONE, DEGREE, OPEN_TO_OTHER_COURSE)      
-                                            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    public const REGISTER_AS_TA          = "INSERT INTO TA        (ID) VALUES (?)";
 
     public const REGISTER_AS_INSTRUCTOR  = "INSERT INTO INSTRUCTOR(ID) VALUES (?)";
 
-    public const REGISTER_AS_SYSOP       = "INSERT INTO SYSOP   VALUES (?);";
+    public const REGISTER_AS_SYSOP       = "INSERT INTO SYSOP     (ID) VALUES (?);";
 
-    public const REGISTER_AS_ADMIN       = "INSERT INTO ADMIN   VALUES (?);";
+    public const REGISTER_AS_ADMIN       = "INSERT INTO ADMIN     (ID) VALUES (?);";
 
     public const DELETE_USER             = "DELETE FROM USER WHERE USER_ID = ?;";
 
@@ -80,35 +78,45 @@ class SQL_STATEMENTS
     ============================================================
     */
 
-    public const FIND_COURSE                 = "SELECT CNUM, CTERM FROM REGISTER_STUDENT_COURSE    WHERE SID = ? UNION
-                                                SELECT CNUM, CTERM FROM REGISTER_TA_COURSE         WHERE TID = ? UNION
-                                                SELECT CNUM, CTERM FROM REGISTER_INSTRUCTOR_COURSE WHERE IID = ?;";
+    public const FIND_COURSE                   = "SELECT CID FROM REGISTER_STUDENT_COURSE    WHERE SID = ? UNION
+                                                  SELECT CID FROM REGISTER_TA_COURSE         WHERE TID = ? UNION
+                                                  SELECT CID FROM REGISTER_INSTRUCTOR_COURSE WHERE IID = ?;";
 
-    public const FIND_STUDENT_COURSE         = "SELECT CNUM, CTERM FROM REGISTER_STUDENT_COURSE    WHERE SID = ?;";
+    public const GET_COURSE_TITLE              = "SELECT COURSE_TITLE FROM COURSE WHERE COURSE_ID = ?;";
 
-    public const FIND_TA_COURSE              = "SELECT CNUM, CTERM FROM REGISTER_TA_COURSE         WHERE TID = ?;";
+    public const FIND_STUDENT_COURSE           = "SELECT CID FROM REGISTER_STUDENT_COURSE WHERE SID = ?;";
 
-    public const FIND_INSTRUCTOR_COURSE      = "SELECT CNUM, CTERM FROM REGISTER_INSTRUCTOR_COURSE WHERE IID = ?;";
+    public const FIND_TA_COURSE                = "SELECT CID, SINCE, HOURS, NOTE 
+                                                  FROM REGISTER_TA_COURSE WHERE TID = ?;";
 
-    public const ADD_COURSE                  = "INSERT INTO COURSE(COURSE_TITLE, COURSE_NUM, TERM_YEAR) VALUES (?, ?, ?);";
+    public const FIND_INSTRUCTOR_COURSE        = "SELECT CID FROM REGISTER_INSTRUCTOR_COURSE WHERE IID = ?;";
 
-    public const DELETE_COURSE               = "DELETE FROM COURSE WHERE COURSE_NUM = ? AND TERM_YEAR = ?;";
+    public const ADD_COURSE                    = "INSERT INTO COURSE(COURSE_TITLE, COURSE_NUM, TERM_YEAR) VALUES (?, ?, ?);";
 
-    public const COUNT_COURSE                = "SELECT COUNT(*) FROM COURSE WHERE COURSE_NUM = ? AND TERM_YEAR = ?;";
+    public const UPDATE_COURSE_TITLE           = "UPDATE COURSE SET COURSE_TITLE = ? WHERE COURSE_ID = ?;";
 
-    public const REGISTER_STUDENT_COURSE     = "INSERT INTO REGISTER_STUDENT_COURSE   (SID, CNUM, CTERM, SINCE) VALUES (?, ?, ?, ?);";
+    public const UPDATE_COURSE_NUM             = "UPDATE COURSE SET COURSE_NUM   = ? WHERE COURSE_ID = ?;";
 
-    public const REGISTER_TA_COURSE          = "INSERT INTO REGISTER_TA_COURSE (TID, CNUM, CTERM, SINCE, HOURS, NOTE) 
-                                                VALUES (?, ?, ?, ?, ?, ?);";
+    public const UPDATE_COURSE_TERM            = "UPDATE COURSE SET TERM_YEAR    = ? WHERE COURSE_ID = ?;";
 
-    public const REGISTER_INSTRUCTOR_COURSE  = "INSERT INTO REGISTER_INSTRUCTOR_COURSE(IID, CNUM, CTERM, SINCE) VALUES (?, ?, ?, ?);";
+    public const DELETE_COURSE                 = "DELETE FROM COURSE WHERE COURSE_NUM = ? AND TERM_YEAR = ?;";
 
-    public const COUNT_STUDENT_COURSE        = "SELECT COUNT(*) FROM REGISTER_STUDENT_COURSE    WHERE SID = ? AND CNUM = ? AND CTERM = ?;";
+    public const COUNT_COURSE                  = "SELECT COUNT(*) FROM COURSE WHERE COURSE_NUM = ? AND TERM_YEAR = ?;";
 
-    public const COUNT_TA_COURSE             = "SELECT COUNT(*) FROM REGISTER_TA_COURSE         WHERE TID = ? AND CID = ?;";
+    public const REGISTER_STUDENT_COURSE       = "INSERT INTO REGISTER_STUDENT_COURSE   (SID, CID, SINCE) VALUES (?, ?, ?);";
 
-    public const COUNT_INSTRUCTOR_COURSE     = "SELECT COUNT(*) FROM REGISTER_INSTRUCTOR_COURSE WHERE IID = ? AND CNUM = ? AND CTERM = ?;";
+    public const REGISTER_TA_COURSE            = "INSERT INTO REGISTER_TA_COURSE        (TID, CID, SINCE) VALUES (?, ?, ?);";
 
-    public const RATE_TA                     = "INSERT INTO RATE (CNUM, CTERM, SID, TID, RATING, MSG) VALUES (?, ?, ?, ?, ?, ?)";
+    public const REGISTER_INSTRUCTOR_COURSE    = "INSERT INTO REGISTER_INSTRUCTOR_COURSE(IID, CID, SINCE) VALUES (?, ?, ?);";
+
+    public const COUNT_STUDENT_COURSE          = "SELECT COUNT(*) FROM REGISTER_STUDENT_COURSE    WHERE SID = ? AND CID = ?;";
+
+    public const COUNT_TA_COURSE               = "SELECT COUNT(*) FROM REGISTER_TA_COURSE         WHERE TID = ? AND CID = ?;";
+
+    public const COUNT_INSTRUCTOR_COURSE       = "SELECT COUNT(*) FROM REGISTER_INSTRUCTOR_COURSE WHERE IID = ? AND CID = ?;";
+
+    public const RATE_TA                       = "INSERT INTO RATE   (CID, SID, TID, RATING, MSG)    VALUES (?, ?, ?, ?, ?)";
+
+    public const INSTRUCTOR_LOG                = "INSERT INTO TA_LOG (CID, IID, TID, NOTE, WISHLIST) VALUES (?, ?, ?, ?, ?);";
 
 }
