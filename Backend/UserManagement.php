@@ -64,39 +64,51 @@ class UserManagement extends DatabaseDriver
      * <p> -11 : Incorrect $property value or unknown SQL error </p>
      * @see SQL_STATEMENTS
      */
-    function User_Count(String $property, String $value): int
+    function Count_User(String $property, String $value): int
     {
-        // Get connection
-        $conn  = $this -> get_connection();
-
-        // Get statements
-        $statement_library = new SQL_STATEMENTS();
-
-        $statement = null;
-
-        switch ($property)
+        try
         {
-            case "email":
+            // Get connection
+            $conn  = $this -> get_connection();
+
+            // Get statements
+            $statement_library = new SQL_STATEMENTS();
+
+            $statement = null;
+
+            switch ($property)
             {
-                $statement = $conn -> prepare($statement_library::FIND_USER_EMAIL);
-                break;
+                case "email":
+                {
+                    $statement = $conn -> prepare($statement_library::COUNT_USER_EMAIL);
+                    break;
+                }
+
+                case "id":
+                {
+                    $statement = $conn -> prepare($statement_library::COUNT_USER_ID);
+                    break;
+                }
+                case "username":
+                {
+                    $statement = $conn -> prepare($statement_library::COUNT_USER_NAME);
+                    break;
+                }
+                default:
+                {
+                    echo "Unknown property: ".$property.PHP_EOL;
+                    return -11;
+                }
             }
 
-            case "id":
-            {
-                $statement = $conn -> prepare($statement_library::FIND_USER_ID);
-                break;
-            }
-            case "username":
-            {
-                $statement = $conn -> prepare($statement_library::FIND_USER_NAME);
-                break;
-            }
-            default: return -11;
+            $statement        -> execute([$value]);
+            return $statement -> fetchColumn();
         }
-
-        $statement -> execute([$value]);
-        return $statement->fetchColumn();
+        catch (Exception $e)
+        {
+            echo $e->getMessage();
+            return -11;
+        }
     }
 
     /** TODO: Discuss tolerance for special character (e.g., é)
@@ -153,7 +165,7 @@ class UserManagement extends DatabaseDriver
         // Verify username
         if (empty($username) || strlen($username) > 30)
             return -1; // Incorrect username length ([1, 30] expected)
-        if ($this->User_Count("username", $username) != 0)
+        if ($this->Count_User("username", $username) != 0)
             return -2; // Username already taken
 
         // Verify password
@@ -163,7 +175,7 @@ class UserManagement extends DatabaseDriver
         // Verify userID TODO:Design choice
         if (strlen($userID) != 9 || preg_match('#[^0-9]#', $userID))
             return -5; // Incorrect userID format: should be 9 digits
-        if ($this->User_Count("id", $userID) != 0)
+        if ($this->Count_User("id", $userID) != 0)
             return -6; // UserID already taken
 
         // Verify first/last name
@@ -175,7 +187,7 @@ class UserManagement extends DatabaseDriver
         // Verify email
         if (empty($email) || strlen($email) < 3 || strlen($email) > 320)
             return -9; // Incorrect email length ([4, 320] expected)
-        if ($this->User_Count("email", $email) != 0)
+        if ($this->Count_User("email", $email) != 0)
             return -10; // Email already taken!
 
         try
@@ -226,7 +238,7 @@ class UserManagement extends DatabaseDriver
     {
         if (empty($username) || strlen($username) > 30)
             return -1; // Incorrect username length ([1, 30] expected)
-        if ($this->User_Count("username", $username) == 0)
+        if ($this->Count_User("username", $username) == 0)
             return -2; // Username not found in database
 
         $password_errCode = $this->Password_Validation($password);
@@ -321,7 +333,7 @@ class UserManagement extends DatabaseDriver
     function Update_User(String $userID, String $property, String $new_value): int
     {
         // Verify userID
-        if ($this->User_Count("id", $userID) == 0)
+        if ($this->Count_User("id", $userID) == 0)
             return -6; // UserID doesn't exist!
 
         try
@@ -340,7 +352,7 @@ class UserManagement extends DatabaseDriver
                 {
                     if (strlen($new_value) != 9 || preg_match('#[^0-9]#', $new_value))
                         return -5; // Incorrect userID format: should be 9 digits
-                    if ($this -> User_Count("id", $new_value) != 0)
+                    if ($this -> Count_User("id", $new_value) != 0)
                         return -6; // UserID already taken
 
                     $statement = $conn -> prepare($statement_library::UPDATE_ID);
@@ -351,7 +363,7 @@ class UserManagement extends DatabaseDriver
                     // Verify username
                     if (empty($new_value) || strlen($new_value) > 30)
                         return -1; // Incorrect username length ([1, 30] expected)
-                    if ($this->User_Count("username", $new_value) != 0)
+                    if ($this->Count_User("username", $new_value) != 0)
                         return -2; // Username already taken
 
                     $statement = $conn -> prepare($statement_library::UPDATE_USERNAME);
@@ -396,15 +408,16 @@ class UserManagement extends DatabaseDriver
                     // Verify email
                     if (empty($new_value) || strlen($new_value) < 3 || strlen($new_value) > 320)
                         return -9; // Incorrect email length ([4, 320] expected)
-                    if ($this->User_Count("email", $new_value) != 0)
+                    if ($this->Count_User("email", $new_value) != 0)
                         return -10; // Email already taken!
 
                     $statement = $conn -> prepare($statement_library::UPDATE_EMAIL);
                     break;
                 }
-                default : {
-                    echo "Unknown property for update operation. choosing between userID, username, password, 
-                         firstName, lastName and email.\n";
+                default :
+                {
+                    echo "Unknown property for update operation: ". $property . " choosing between userID, username, 
+                    password, firstName, lastName and email.\n";
                     return -11;
                 }
             }
@@ -419,29 +432,206 @@ class UserManagement extends DatabaseDriver
         return 0;
     }
 
-    /**
-     * Debug tool to decode error code messages
-     * @param int $errCode
+    /** TODO: MODIFY ACCORDING TO TA, STUDENT AND INSTRUCTOR TABLE
+     * Verify if given user has given identity.
+     * @param String $role       choosing between "student", "ta", "instructor", "sysop" and "admin"
+     * @param String $userID
+     * @param array  $extra_info extra information based on table
+     * @return int
+     * <p>errCode: Result of registration                                                </p>
+     * <ul>
+     * <li> 0:  Success                                                                  </li>
+     * <li>-5:  Incorrect userID format: should be 9 digits                              </li>
+     * <li>-6:  Already registered as role!                                              </li>
+     * <li>-8:  Supervisor name too long!                                                </li>
+     * <li>-11: Unknown SQL error or unknown property. (See echo)                        </li>
+     * <li>-21: Incorrect education choice: should be between 'grad', 'ugrad' and 'other </li>
+     * <li>-22: Location too long! Should be less than 256 characters                    </li>
+     * <li>-23: Phone number too long! Should be less than 30 characters                 </li>
+     * <li>-24: Negative degree                                                          </li>
+     * </ul>
+     * @see UserManagement::Register_As_TA()
      */
-    function errCode_decoder(int $errCode)
+    function Register_As(String $role, String $userID, array $extra_info = []) : int
     {
-        echo match ($errCode)
+        try
         {
-             0      => "Success",
-            -1      => "Incorrect username length ([1, 30] expected)",
-            -2      => "Username already taken/doesn't exist!",
-            -3      => "Empty password",
-            -4      => "Incorrect password format",
-            -5      => "Incorrect userID format: should be 9 digits",
-            -6      => "userID already taken/doesn't exist!",
-            -7      => "Empty first/last name",
-            -8      => "First/last name too long! (greater than 256 characters)",
-            -9      => "Incorrect email length ([4, 320] expected)",
-            -10     => "Email already taken/doesn't exist!",
-            -11     => "Unknown SQL error or unknown property. (See echo)",
-            -12     => "Invalid username/password pair",
-            default => "Unknown Error Code!",
-        };
-        echo PHP_EOL;
+            // Verify if already registered
+            $cmgt    = new CourseManagement($this->get_database_path());
+            $errCode = $cmgt->Verify_Identity($role, $userID);
+            if ($errCode == 0)   return -6;       // Already registered!
+            if ($errCode != -12) return $errCode; // Some error occurred
+            unset($cmgt);
+
+            // Create connection
+            $conn = $this->get_connection();
+
+            // Create statement
+            $statement_library = new SQL_STATEMENTS();
+            $statement         = null;
+
+            switch ($role)
+            {
+                case "student":
+                {
+                    $statement = $conn->prepare($statement_library::REGISTER_AS_STUDENT);
+                    break;
+                }
+                case "ta":
+                {
+                    if (sizeof($extra_info) !== 7)
+                        return $this->Register_As_TA($userID);
+                    return $this->Register_As_TA($userID, $extra_info[0], $extra_info[1], $extra_info[2], $extra_info[3],
+                                                          $extra_info[4], $extra_info[5], $extra_info[6]);
+                }
+                case "instructor":
+                {
+                    $statement = $conn->prepare($statement_library::REGISTER_AS_INSTRUCTOR);
+                    break;
+                }
+                case "sysop":
+                {
+                    $statement = $conn->prepare($statement_library::REGISTER_AS_SYSOP);
+                    break;
+                }
+                case "admin":
+                {
+                    $statement = $conn->prepare($statement_library::REGISTER_AS_ADMIN);
+                    break;
+                }
+                default:
+                {
+                    echo "Unknown role: ".$role.PHP_EOL;
+                    return -11;
+                }
+            }
+
+            $statement->execute([$userID]);
+            return 0;
+        }
+        catch (Exception $e)
+        {
+            echo $e->getMessage();
+            return -11;
+        }
+    }
+
+
+    /**
+     * Complete version of registering a TA
+     * @param  String $userID
+     * @param  String $Education  Choose between 'grad', 'ugrad' and 'other'
+     * @param  String $Supervisor Full name. Less than 512 characters.
+     * @param  bool   $Priority   boolean
+     * @param  String $Location   Address. Less than 256 characters.
+     * @param  String $Phone      Phone number. Less than 30 characters.
+     * @param  int    $Degree     Non-negative number
+     * @param  bool   $Open       boolean
+     * @return int
+     * <p>errCode: Result of registration                                                </p>
+     * <li>-8:  Supervisor name too long!                                                </li>
+     * <li>-21: Incorrect education choice: should be between 'grad', 'ugrad' and 'other </li>
+     * <li>-22: Location too long! Should be less than 256 characters                    </li>
+     * <li>-23: Phone number too long! Should be less than 30 characters                 </li>
+     * <li>-24: Negative degree                                                          </li>
+     * @see UserManagement::Register_As()
+     */
+    function Register_As_TA(String $userID,
+                            String $Education  = "other",
+                            String $Supervisor = "unknown",
+                            bool   $Priority   = false,
+                            String $Location   = "unknown",
+                            String $Phone      = "unknown",
+                            int    $Degree     = 0,
+                            bool   $Open       = false
+                           ): int
+    {
+        // Verify if already registered
+        $cmgt    = new CourseManagement($this->get_database_path());
+        $errCode = $cmgt->Verify_Identity("ta", $userID);
+        if ($errCode == 0)   return -6;       // Already registered!
+        if ($errCode != -12) return $errCode; // Some error occurred
+        unset($cmgt);
+
+        // Verify education
+        if (!preg_match("/[gard]|[ugrad]|[other]/", $Education))
+            return -21; // Incorrect education choice: should be between 'grad', 'ugrad' and 'other'
+
+        // Verify Supervisor
+        if (strlen($Supervisor) > 512)
+            return -8; // Supervisor name too long! Should be less than 512 characters
+
+        // Verify Location
+        if (strlen($Location) > 256)
+            return -22; // Location too long! Should be less than 256 characters
+
+        // Verify Phone
+        if (strlen($Phone) > 30)
+            return -23; // Phone number too long! Should be less than 30 characters
+
+        // Verify Degree
+        if ($Degree < 0)
+            return -24; // Negative degree.
+
+        try
+        {
+            // Create connection
+            $conn = $this->get_connection();
+
+            // Create statement
+            $statement_library = new SQL_STATEMENTS();
+            $statement         = $conn->prepare($statement_library::REGISTER_AS_TA);
+
+            // Execute
+            $statement -> execute([$userID, $Education, $Supervisor, $Priority, $Location, $Phone, $Degree, $Open]);
+
+            return 0;
+        }
+        catch (Exception $e)
+        {
+            echo $e->getMessage();
+            return -11;
+        }
+    }
+
+    /**
+     * Delete a user from USER (and from related tables)
+     * @param  String $userID
+     * @return int
+     * <p>errCode: Result of verifying                              </p>
+     * <ul>
+     * <li> 0:  Success                                             </li>
+     * <li>-5:  Incorrect userID format: should be 9 digits         </li>
+     * <li>-6:  UserID doesn't exist!                               </li>
+     * <li>-11: Unknown SQL error. (See echo)                       </li>
+     * </ul>
+     */
+    function Delete_User(string $userID): int
+    {
+        // Verify userID
+        if (strlen($userID) != 9 || preg_match('#[^0-9]#', $userID))
+            return -5; // Incorrect userID format: should be 9 digits
+        if ($this->Count_User("id", $userID) == 0)
+            return -6; // UserID doesn't exist!
+
+        try
+        {
+            // Create connection
+            $conn = $this->get_connection();
+
+            // Create statement
+            $statement_library = new SQL_STATEMENTS();
+            $statement         = $conn->prepare($statement_library::DELETE_USER);
+
+            // Execute
+            $statement->execute([$userID]);
+
+            return 0;
+        }
+        catch (Exception $e)
+        {
+            echo $e->getMessage();
+            return -11;
+        }
     }
 }
