@@ -1,7 +1,7 @@
 <?php
 
 // This function displays all the lines from some file at path $path.
-finction display($path)
+function display($path)
 {
 	$file = fopen($path,"r");
 	while(!feof($file))

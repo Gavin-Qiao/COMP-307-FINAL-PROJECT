@@ -1,0 +1,13 @@
+<!-- Header --->
+  <div class="container" style="height:150px;background: rgba(255, 255, 255, 0);"> 
+
+	<text style="margin-left:-30px;"> McGill Department of &nbsp &nbsp <br> Computer Science &nbsp &nbsp </text>
+	<img src="../../assets/comp_sci_logo.png" style="height:75px;width:75px;border-radius:50%;" > </img>
+	&nbsp &nbsp TA Management
+
+  </div>
+
+<div class="container" style="height:50px ;background: rgba(0, 0, 0, 0);"> <h2 style="color:red;background: rgba(255,255,255,0.75);">  <h2> </div>
+<!-- Error: This is an invalid account. Please try again. --->
+
+<!-- End of header --->
