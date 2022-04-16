@@ -5,7 +5,7 @@
 @import 'https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300';
 
 html,body {
-  background-image: url("../../assets/background_photos/mcgill_bckgrnd_1.jpeg");
+  background-image: url("assets/background_photos/mcgill_bckgrnd_1.jpeg");
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: 100% 100%;
