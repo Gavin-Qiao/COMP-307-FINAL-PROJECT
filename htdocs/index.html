@@ -5,7 +5,7 @@
 @import 'https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300';
 
 html,body {
-  background-image: url("assets/background_photos/mcgill_bckgrnd_1.jpeg");
+  background-image: url("../../assets/background_photos/mcgill_bckgrnd_1.jpeg");
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: 100% 100%;
@@ -19,7 +19,6 @@ html,body {
 }
 
 .col {
-  margin-top: 200px;
   height: 100%;
 }
 
@@ -248,52 +247,45 @@ a {
   font-size: 12px;
 }
 
-
 </style>
+
 
 <body>
 
 <div class="col">
-  <div class="container" style="height:340;">
 
-<!--
-    <form id="form" action="login-result.php" method="GET">	
-	<input type="text" name="username" size="10" maxlength="30">
-	<textarea name="fname_text" rows=5 cols=20>
-	</textarea>
-	<input type="password" name="pass" size="25">
-    </form>
---->
+<!-- Header --->
+  <div class="container" style="height:150px;background: rgba(255, 255, 255, 0);"> 
 
-<form id="form" action="src/back-end/login.php" method="GET" class="login">
+	<text style="margin-left:-30px;"> McGill Department of &nbsp &nbsp <br> Computer Science &nbsp &nbsp </text>
+	<img src="../../assets/comp_sci_logo.png" style="height:75px;width:75px;border-radius:50%;" > </img>
+	&nbsp &nbsp TA Management
+
+  </div>
+<!-- End of header --->
+
+  <div class="container" style="height:50px ;background: rgba(0, 0, 0, 0);"> </div>
+
+  <div class="container" style="height:335px;">
+
+<form id="form" action="login-result.php" method="GET" class="login">
   <input type="text" placeholder="Username" name="username">
   <input type="password" placeholder="Password" name="pass">
   <button type="submit">Login</button>
 </form>
 
+  </div>
 
 
- </div>
-
-
-
-
-<div class="container" style="margin-left:37%; width:25%; margin-top:25px; height:100px;background: rgba(0, 0, 0, 0);">  
+  <div class="container" style="margin-left:37%; width:25%; margin-top:25px; height:100px;background: rgba(0, 0, 0, 0);">  
 
 <div class="btn btn-four" style="background: rgba(175, 0, 0, 0.9);">
-   	   <span> REGISTER </span>
-   	</div>
- 
+<span> REGISTER </span>
 </div>
  
+  </div>
 
 </div>
-
-<!--
-<div class="col-5 col-s-5""> </div>
-<div class="col-2 col-s-2"> </div>
-<div class="col-5 col-s-5"> </div>
---->
 
 </body>
 
