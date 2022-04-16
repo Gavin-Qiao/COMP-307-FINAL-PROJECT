@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 
     if ($registerErrCode == 0)
     {
-        header("Location: ../index.php");
+        header("Location: ../../index.php");
     }
     else
     {
