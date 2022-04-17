@@ -7,9 +7,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
     $courseManager = new CourseManagement('../../matter/dbf/TA_Management_Website.db');
 
-    $course_title = $_POST["title"];
-    $course_num = $_POST["number"];
-    $term = $_POST["term"];
+    $course_title = Utilities::cleanInput($_POST["title"]);
+    $course_num = Utilities::cleanInput($_POST["number"]);
+    $term = Utilities::cleanInput($_POST["term"]);
 
     $addErrCode = $courseManager->Add_Course($course_title, $course_num, $term);
 

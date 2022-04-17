@@ -7,9 +7,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
     $userManager = new UserManagement('../../matter/dbf/TA_Management_Website.db');
 
-    $user_id = $userManager->Get_UserID($_POST["username"]);
-    $property = $_POST["property"];
-    $newValue = $_POST["newValue"];
+    $user_id = $userManager->Get_UserID(Utilities::cleanInput($_POST["username"]));
+    $property = Utilities::cleanInput($_POST["property"]);
+    $newValue = Utilities::cleanInput($_POST["newValue"]);
 
     $editErrCode = $userManager->Update_User($user_id, $property, $newValue);
 

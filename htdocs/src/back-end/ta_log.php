@@ -11,10 +11,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 
     session_start();
 
-    $course_id = $_POST["course_id"];
+    $course_id = Utilities::cleanInput($_POST["course_id"]);
     $instructor_id = $userManager->Get_UserID($_SESSION["username"]);
-    $ta_id = $userManager->Get_UserID($_POST["ta_username"]);
-    $message = $_SESSION["message"];
+    $ta_id = $userManager->Get_UserID(Utilities::cleanInput($_POST["ta_username"]));
+    $message = Utilities::cleanInput($_POST["message"]);
 
     $logErrCode = $courseManager->Instructor_Log($course_id, $instructor_id, $ta_id, $message);
 
@@ -24,7 +24,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     }
     else
     {
-        session_start();
         $_SESSION["errCode"] = $logErrCode;
         header("Location: ../front-end/?"); // TODO: fill in URL
     }
