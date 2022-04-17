@@ -24,7 +24,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     {
         session_start();
         $_SESSION["errCode"] = $registerErrCode;
-        header("Location: ../front-end/register.php");
+        echo $registerErrCode;
+//        header("Location: ../front-end/register.html");
     }
 
     die();
