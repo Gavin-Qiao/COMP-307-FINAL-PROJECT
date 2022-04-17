@@ -346,6 +346,75 @@ class CourseManagement extends DatabaseDriver
         }
     }
 
+    /** Delete a user from course registration
+     * @param String $userID
+     * @param String $role     choosing between "student", "ta" and "instructor"
+     * @param String $courseID e.g., WINTER2022_COMP307
+     * @return int
+     * <p> ErrCode of deletion                                                             </p>
+     * <ul>
+     * <li>  0: Success                                                                    </li>
+     * <li>-11: Unknown SQL error. (See echo)                                              </li>
+     * <li>-12: Identity mismatch. ($userID is not one of the $role)                       </li>
+     * <li>-14: Invalid course_num format: /^[A-Z]{4}[0-9]{3}$/ expected!                  </li>
+     * <li>-15: Invalid term format: /^((WINTER)|(SUMMER)|(FALL))[0-9]{4}/ expected!       </li>
+     * <li>-16: Course doesn't exist!                                                      </li>
+     * </ul>
+     * @see CourseManagement::Verify_Identity() for errCode -12
+     */
+    function Remove_From_Course(String $userID, String $role, String $courseID) : int
+    {
+        // Verify course existence
+        $decode  = $this -> Decode_CourseID($courseID);
+        $errCode = $this -> Count_Course($decode['COURSE_NUM'], $decode['TERM_YEAR']);
+
+        if($errCode == 0) return -16;       // Course doesn't exist!
+        if($errCode <  0) return $errCode;  // Error with $num or $term
+
+        // Verify identity
+        $errCode = $this->Verify_Identity($role, $userID);
+        if ($errCode != 0)
+            return $errCode;
+
+        try
+        {
+            // Get connection
+            $conn = $this->get_connection();
+
+            // Get statements
+            $statement_library = new SQL_STATEMENTS();
+            $statement         = null;
+            switch ($role)
+            {
+                case "student":
+                {
+                    $statement = $conn->prepare($statement_library::DELETE_STUDENT_COURSE);
+                    break;
+                }
+                case "ta":
+                {
+                    $statement = $conn->prepare($statement_library::DELETE_TA_COURSE);
+                    break;
+                }
+                case "instructor":
+                {
+                    $statement = $conn->prepare($statement_library::DELETE_INSTRUCTOR_COURSE);
+                    break;
+                }
+            }
+
+            // Execute
+            $statement->execute([$userID, $courseID]);
+            return 0;
+        }
+        catch (Exception $e)
+        {
+            echo $e -> getMessage();
+            return -11;
+        }
+    }
+
+
     /** Register a user to a course
      * @param String $userID
      * @param String $role choosing between "student", "ta" and "instructor"
@@ -356,7 +425,6 @@ class CourseManagement extends DatabaseDriver
      * <li> $date="null"  : default (NULL for SINCE field)    </li>
      * <li> $date="set"   : set current date.                 </li>
      * <li> $date="Y-m-d" : set given date.(e.g., 2022-04-15) </li>
-     * @param array $extra_info optional for complete registration
      * @return int
      * <p> ErrCode of registration                                                         </p>
      * <ul>
@@ -367,13 +435,10 @@ class CourseManagement extends DatabaseDriver
      * <li>-15: Invalid course_num format: /^((WINTER)|(SUMMER)|(FALL))[0-9]{4}/ expected! </li>
      * <li>-16: Course doesn't exist!                                                      </li>
      * <li>-17: Incorrect date format! (Should be Y-m-d)                                   </li>
-     * <li>-24: Negative degree/hour                                                       </li>
-     * <li>-25: Note too long! Should be less than 1024 characters                         </li>
      * </ul>
      * @see CourseManagement::Verify_Identity() for errCode -12
-     * @see CourseManagement::Register_TA_To_Course() for errCode -24, -25
      */
-    function Register_To_Course(String $userID, String $role, String $num, String $term, String $date="null", array $extra_info = []) : int
+    function Register_To_Course(String $userID, String $role, String $num, String $term, String $date="null") : int
     {
         // Verify course existence
         $errCode = $this->Count_Course($num, $term);
@@ -709,8 +774,8 @@ class CourseManagement extends DatabaseDriver
             return $errCode; // $tid doesn't match a TA
 
         $decode  = $this-> Decode_CourseID($cid);
-        $num     = $decode[1];
-        $term    = $decode[0];
+        $num     = $decode['COURSE_NUM'];
+        $term    = $decode['TERM_YEAR'];
         $errCode = $this->Count_Course($num, $term);
 
         if ($errCode != 1)
