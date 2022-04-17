@@ -254,6 +254,8 @@ a {
 
 <div class="col">
 
+<img src onerror="populateForm()">
+
 <!-- Header --->
 
   <div class="container" style="height:100px;background: rgba(255, 255, 255, 0);"> 
@@ -275,8 +277,7 @@ a {
 
 <form id="form" action="" method="POST" class="login">
 	<select name="course" id="course-select">
-	  <option value=""> --- Please choose an option--</option>
-	  <option value="temp_val"> temp </option>
+	  <option value=""> --Please choose an option--</option>
 	</select> <br>
 	<button type="submit">Select</button>
 </form>
@@ -287,15 +288,11 @@ a {
 
 <script>
 
-function openPage(page)
-{
-	window.location.href = page;
-}
 function populateForm()
 {
 
-	var formString = "<form id='form' action='' method='POST' class='login'>
-				<select name='course' id='course-select'>";
+	var formString = "<form id='form' action='TA_manage_frontend.php' method='POST' class='login'>
+				<select name='course' id='course-select'>" + "<option value=''> --Please choose an option--</option>";
 
 	formString += <?php
 
