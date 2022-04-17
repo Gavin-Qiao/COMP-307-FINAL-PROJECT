@@ -6,6 +6,7 @@ require_once 'SQL_STATEMENTS.php';
 class CourseManagement extends DatabaseDriver
 {
 
+
     /**
      * Decode CID to TERM_YEAR and COURSE_NUM
      * @param String $CourseID e.g., WINTER2022_COMP307
@@ -13,6 +14,14 @@ class CourseManagement extends DatabaseDriver
      */
     function Decode_CourseID(String $CourseID): array
     {
+        if (!function_exists('str_contains'))
+        {
+            function str_contains($haystack, $needle): bool
+            {
+                return $needle !== '' && mb_strpos($haystack, $needle) !== false;
+            }
+        }
+
         if (empty($CourseID) || !str_contains($CourseID, "_"))
             return array();
 
