@@ -9,7 +9,7 @@ function display($path)
 		$line = fgets($file);
 		echo $line;
 	}
-	fline($file);
+	fclose($file);
 }
 
 // foreach ($_GET as $key => $value) { }
