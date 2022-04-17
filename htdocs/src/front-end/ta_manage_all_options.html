@@ -126,11 +126,6 @@ div[class*=container] {
 }
 
 
-/* DIVIDER */
-
-
-/* DIVIDER MAYBE */
-
 </style>
 
 <body>
@@ -149,46 +144,60 @@ div[class*=container] {
 
 <!-- End of header --->
 
-
-<!-- Buttons --->
-
-<!-- Rate TA --->
-  <div class="container" style="height:150px;background: rgba(0, 100, 20, 0.6);">  
-
-<div onclick="openPage('TA_rate.html')" class="btn btn-four" style="background: rgba(175, 0, 0, 0.9);">
-<span> Rate a TA </span>
-</div>
- 
+<!-- Spacer --->
+  <div class="container" style="height:50px ;background: rgba(0, 0, 0, 0);"> 
   </div>
 
-<!-- TA Administration --->
-  <div class="container" style="height:150px;background: rgba(0, 80, 80, 0.6)">  
+<!-- These two buttons will be available for both teachers and TAs --->
+  <div class="container" style="height:125px;background: rgba(90, 20, 20, 0.6)">  
 
-<div onclick="openPage('TA_admin.html')" class="btn btn-four" style="background: rgba(175, 0, 0, 0.9);">
-<span> TA Administration </span>
+<div onclick="openPage('TA_manage_pages/office_hours.html')" class="btn btn-four" style="background: rgba(175, 0, 0, 0.9);">
+<span> Office Hours/Responsibilities </span>
 </div>
- 
+
   </div>
 
-<!-- TA Management --->
-  <div class="container" style="height:150px;background: rgba(90, 20, 20, 0.6)">  
+  <div class="container" style="height:125px;background: rgba(90, 20, 20, 0.6)">  
 
-<div onclick="openPage('TA_manage_choose_class.html')" class="btn btn-four" style="background: rgba(175, 0, 0, 0.9);">
-<span> TA Management </span>
+<div onclick="openPage('TA_manage_pages/channel.html')" class="btn btn-four" style="background: rgba(175, 0, 0, 0.9);">
+<span> Channel </span>
 </div>
- 
+
   </div>
 
-<!-- System Operator --->
-  <div class="container" style="height:150px;background: rgba(80, 80, 20, 0.7)">  
+  <div class="container" style="height:125px;background: rgba(90, 20, 20, 0.6)">  
 
-<div onclick="openPage('sys_op.html')" class="btn btn-four" style="background: rgba(175, 0, 0, 0.9);">
-<span> System Operations </span>
+<div onclick="openPage('TA_manage_pages/ta_performance_log.html')" class="btn btn-four" style="background: rgba(175, 0, 0, 0.9);">
+<span> TA Performance Log </span>
 </div>
- 
+
+  </div>
+
+
+  <div class="container" style="height:125px;background: rgba(90, 20, 20, 0.6)">  
+
+<div onclick="openPage('TA_manage_pages/ta_wishlist.html')" class="btn btn-four" style="background: rgba(175, 0, 0, 0.9);">
+<span> TA Wishlist </span>
+</div>
+
+  </div>
+
+
+  <div class="container" style="height:125px;background: rgba(90, 20, 20, 0.6)">  
+
+<div onclick="openPage('TA_manage_pages/allTAReport.html')" class="btn btn-four" style="background: rgba(175, 0, 0, 0.9);">
+<span> All TAs Report </span>
+</div>
+
+  </div>
+
+<!-- Spacer --->
+  <div class="container" style="height:50px ;background: rgba(0, 0, 0, 0);"> 
   </div>
 
 </div>
+
+
 
 <script>
 
@@ -201,3 +210,4 @@ function openPage(page)
 
 </body>
 </html>
+
