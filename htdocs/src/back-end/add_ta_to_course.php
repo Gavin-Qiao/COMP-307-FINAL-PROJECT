@@ -9,25 +9,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     $userManager = new UserManagement('../../matter/dbf/TA_Management_Website.db');
     $courseManager = new CourseManagement('../../matter/dbf/TA_Management_Website.db');
 
-    session_start();
-
-    $sid = $userManager->Get_UserID($_SESSION["username"]);
-    $tid = $userManager->Get_UserID($_POST["ta_username"]);
-    $course_number = $_POST["course_number"];
+    $user_id = $userManager->Get_UserID($_POST["username"]);
+    $role = $_POST["role"];
+    $course_num = $_POST["number"];
     $term = $_POST["term"];
-    $rating = intval($_POST["rating"]);
-    $message = $_POST["message"];
 
-    $rateErrCode = $courseManager->Rate_TA($sid, $tid, $course_number, $term, $rating, $message);
+    $addErrCode = $courseManager->Register_To_Course($user_id, $role, $course_num, $term);
 
-    if ($rateErrCode == 0)
+    if ($addErrCode == 0)
     {
         header("Location: ../front-end/dashboard.php");
     }
     else
     {
         session_start();
-        $_SESSION["errCode"] = $rateErrCode;
+        $_SESSION["errCode"] = $addErrCode;
         header("Location: ../front-end/?"); // TODO: fill in URL
     }
 

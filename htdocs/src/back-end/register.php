@@ -3,13 +3,6 @@
 require_once 'utilities.php';
 require_once '../../matter/dbf/UserManagement.php';
 
-$username = "";
-$password = "";
-$userID = "";
-$first_name = "";
-$last_name = "";
-$email = "";
-
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
     $userManager = new UserManagement('../../matter/dbf/TA_Management_Website.db');
