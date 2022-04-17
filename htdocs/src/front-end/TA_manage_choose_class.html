@@ -271,7 +271,7 @@ a {
   </div>
 
 <!-- Body --->
-  <div class="container" style="height:400px;background: rgba(90, 20, 20, 0.6)">  
+  <div id="dropdown_form" class="container" style="height:400px;background: rgba(90, 20, 20, 0.6)">  
 
 <form id="form" action="" method="POST" class="login">
 	<select name="course" id="course-select">
@@ -293,11 +293,40 @@ function openPage(page)
 }
 function populateForm()
 {
-	<?php
+
+	var formString = "<form id='form' action='' method='POST' class='login'>
+				<select name='course' id='course-select'>";
+
+	formString += <?php
+
+		require_once '../back-end/utilities.php';
+		session_start();
+
+		$toReturn = "";
+
+		$ta_courses = [];
+		$prof_courses = [];
+		if ($_SESSION["ta"]=="true") $ta_courses = Utilities::getCoursesByRole("$_SESSION['username']","ta");
+		if ($_SESSION["instructor"]=="true") $prof_courses = Utilities::getCoursesByRole("$_SESSION['username']","instructor");
+	
+		foreach ($ta_courses as $ta_course)
+		{
+			$toReturn += "<option value='" + $ta_course + "'>" + $ta_course + "</option>";		
+		}	
+		foreach ($prof_courses as $prof_course)
+		{
+			$toReturn += "<option value='" + $prof_course + "'>" + $prof_course + "</option>";		
+		}
 
 
-
+		echo $toReturn;
 	?>
+
+	formString += 	"</select> <br>
+			<button type='submit'>Select</button>
+		</form>";
+	document.getElementById("dropdown_form").innerHTML = formString;
+
 }
 
 </script>
