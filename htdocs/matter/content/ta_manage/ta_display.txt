@@ -1,3 +1,0 @@
-  <div class="container" style="height:400px;background: rgba(90, 20, 20, 0.6)">  
-
-  </div>
