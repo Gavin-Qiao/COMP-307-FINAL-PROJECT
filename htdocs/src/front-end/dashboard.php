@@ -1,7 +1,7 @@
 <?php
 
 // This function displays all the lines from some file at path $path.
-finction display($path)
+function display($path)
 {
 	$file = fopen($path,"r");
 	while(!feof($file))
@@ -9,39 +9,33 @@ finction display($path)
 		$line = fgets($file);
 		echo $line;
 	}
-	fline($file);
+	fclose($file);
 }
 
-if (sizeof($_GET)==0) ; //print student
+// foreach ($_GET as $key => $value) { }
 
-// REPLACE WITH THIS: foreach ($_GET as $key => $value) { }
+display("../../matter/content/dashboard/dashboard_top.txt");
 
-for ($i = 0;$i<sizeof($_GET);$i++)
+if (sizeof($_SESSION["student"]=="true")
 {
-
-	if (sizeof($_GET[strval($i)]=="student")
-	{
-		
-	}
-	else if ($_GET[strval($i)]=="teacher")
-	{
-		
-	}
-	else if ($_GET[strval($i)]=="TA")
-	{
-
-	}
-	else if ($_GET[strval($i)=="system_operator")
-	{
-
-	}
-	else if ($_GET[strval($i)]=="TA_admin")
-	{
-
-	}
+	display("../../matter/content/dashboard/dashboard_ta_rate.txt");	
 }
+else if ($_SESSION["ta"]=="true" || $_SESSION["instructor"]=="true")
+{
+	display("../../matter/content/dashboard/dashboard_ta_manage.txt");
+}
+else if ($_SESSION["sysop"]=="true")
+{
+	display("../../matter/content/dashboard/dashboard_sysop.txt");
+}
+else if ($_SESSION["admin"]=="true")
+{
+	display("../../matter/content/dashboard/dashboard_ta_admin.txt");
+}
+
 
 // DISPLAY FOOTER
+display("../../matter/content/dashboard/dashboard_end.txt");
 
 ?>
 

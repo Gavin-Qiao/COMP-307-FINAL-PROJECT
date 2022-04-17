@@ -1,12 +1,13 @@
-<?php $errcode=(isset($_SESSION['errCode']))?$_SESSION['errCode']:''); ?>
+<!DOCTYPE html>
 <html>
 
+<head>
 <style>
 
 @import 'https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300';
 
 html,body {
-  background-image: url("assets/background_photos/mcgill_bckgrnd_1.jpeg");
+  background-image: url("../../assets/background_photos/mcgill_bckgrnd_1.jpeg");
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: 100% 100%;
@@ -192,7 +193,7 @@ div[class*=container] {
   color: #fff;
   font-size: 16px;
   text-transform: uppercase;
-  width: 80px;
+  width: 120px;
   border: 0;
   padding: 10px 0;
   margin-top: 10px;
@@ -248,61 +249,71 @@ a {
   font-size: 12px;
 }
 
-</style>
+input:invalid {
+        border: 2px dashed red;
+}
 
+input:valid {
+        border: 2px solid black;
+}
+
+</style>
+</head>
 
 <body>
 
 <div class="col">
 
-<img src onerror="getErrorCode()">
-
 <!-- Header --->
   <div class="container" style="height:100px;background: rgba(255, 255, 255, 0);"> 
 
 	<text style="margin-left:-30px;"> McGill Department of &nbsp &nbsp <br> Computer Science &nbsp &nbsp </text>
-	<img src="assets/comp_sci_logo.png" style="height:75px;width:75px;border-radius:50%;" > </img>
+	<img src="../../assets/comp_sci_logo.png" style="height:75px;width:75px;border-radius:50%;" > </img>
 	&nbsp &nbsp TA Management
 
   </div>
 
 <!-- End of header --->
 
-<div class="container" style="height:100px ;background: rgba(0, 0, 0, 0);"> <h2 id="error" style="color:red;background: rgba(255,255,255,0.75);">  <h2> </div>
-<!-- Error: This is an invalid account. Please try again. --->
-
-  <div class="container" style="height:335px;">
-
-<form id="form" action="src/back-end/login.php" method="POST" class="login">
-  <input type="text" placeholder="Username" name="username">
-  <input type="password" placeholder="Password" name="pass">
-  <button type="submit">Login</button>
-</form>
-
+  <div id="tempID" class="container" style="height:100px ;background: rgba(0, 0, 0, 0);"> 
   </div>
 
+  <div id="form_container" class="container" style="height:335px;">
 
-  <div class="container" style="margin-left:37%; width:25%; margin-top:25px; height:100px;background: rgba(0, 0, 0, 0);">  
+<div class="login">
+  <input id="usernameID" type="text" required pattern="[a-zA-Z]+" maxlength="30" minlength="2" name="username">
+  <input id="passwordID" type="password" required pattern="[a-zA-Z0-9]+" maxlength="64" minlength="8" name="pass">
+  <button onClick="afterGoodCreds()" >Register</button>
+<div>
 
-<div onclick="openReg()" class="btn btn-four" style="background: rgba(175, 0, 0, 0.9);">
-<span> REGISTER </span>
-</div>
- 
   </div>
 
 </div>
 
-<script type="text/javascript">
-  function getErrorCode()
+<script>
+
+  function afterGoodCreds()
   {
-	var Error_Code = '<?php echo $errcode;?>';
-	document.getElementById('error').innerHTML = Error_Code;
+	var usernameVar = document.getElementById("usernameID").value;
+	var passwordVar = document.getElementById("passwordID").value;
+
+	document.getElementById("form_container").innerHTML = "";
+	document.getElementById("form_container").style = "height:450px;";
+	document.getElementById("tempID").style = "height:75px;";
+
+	document.getElementById("form_container").innerHTML =
+	"<form id='reg_form' action='../../src/back-end/register.php' method='POST' class='login'>" +
+	  "<input name='username' type='hidden' value='"+ usernameVar + "'>" +
+	  "<input name='password' type='hidden' value='"+ passwordVar + "'>" +
+	  "<input id='firstNameID' type='text' required pattern='[a-zA-Z]+' maxlength='64' minlength='1' name='first_name' value='First Name'>" +
+	  "<input id='lastNameID' type='text' required pattern='[a-zA-Z0-9]+' maxlength='64' minlength='1' name='last_name' value='Last Name'>" +
+	  "<input id='studentID' type='text' required pattern='[0-9]+' maxlength='9' minlength='9' name='uder_id' value='Student ID'>" +
+	  "<input id='emailID' type='text' required pattern='^[-!#$%&/'*+/0-9=?A-Z^_a-z{|}~](\.?[-!#$%&/'*+/0-9=?A-Z^_a-z{|}~])*@[a-zA-Z](-?[a-zA-Z0-9])*(\.[a-zA-Z](-?[a-zA-Z0-9])*)+$' maxlength='30' minlength='2' name='email' value='Email'>"  +
+	  "<button>Register</button>" +
+	"</form>";
+
   }
 
-  function openReg()
-  {
-	window.location.href = "src/front-end/register.html";
-  }
 </script>
 
 </body>
