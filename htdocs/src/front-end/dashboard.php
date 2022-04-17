@@ -20,15 +20,15 @@ if (sizeof($_SESSION["student"]=="true")
 {
 	display("../../matter/content/dashboard/dashboard_ta_rate.txt");	
 }
-else if ($_SESSION["ta"]=="true" || $_SESSION["instructor"]=="true")
+if ($_SESSION["ta"]=="true" || $_SESSION["instructor"]=="true")
 {
 	display("../../matter/content/dashboard/dashboard_ta_manage.txt");
 }
-else if ($_SESSION["sysop"]=="true")
+if ($_SESSION["sysop"]=="true")
 {
 	display("../../matter/content/dashboard/dashboard_sysop.txt");
 }
-else if ($_SESSION["admin"]=="true")
+if ($_SESSION["admin"]=="true")
 {
 	display("../../matter/content/dashboard/dashboard_ta_admin.txt");
 }
