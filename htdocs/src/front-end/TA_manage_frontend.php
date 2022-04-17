@@ -14,14 +14,13 @@ function display($path)
 
 // foreach ($_GET as $key => $value) { }
 
+session_start();
+$_SESSION["course"] = $_POST["course"];
+
 display("../../matter/content/ta_manage/ta_manage_top.txt");
 
 
-if ($_SESSION["ta"]=="true")
-{
-	display("../../matter/content/ta_manage/ta_display.txt");
-}
-else if ( $_SESSION["instructor"]=="true")
+if ( $_SESSION["instructor"]=="true")
 {
 	display("../../matter/content/ta_manage/instructor_display.txt");
 }

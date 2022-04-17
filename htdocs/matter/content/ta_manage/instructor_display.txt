@@ -1,3 +1,25 @@
-  <div class="container" style="height:400px;background: rgba(90, 20, 20, 0.6)">  
+  <div class="container" style="height:125px;background: rgba(90, 20, 20, 0.6)">  
+
+<div onclick="openPage('TA_manage_pages/ta_performance_log.html')" class="btn btn-four" style="background: rgba(175, 0, 0, 0.9);">
+<span> TA Performance Log </span>
+</div>
+
+  </div>
+
+
+  <div class="container" style="height:125px;background: rgba(90, 20, 20, 0.6)">  
+
+<div onclick="openPage('TA_manage_pages/ta_wishlist.html')" class="btn btn-four" style="background: rgba(175, 0, 0, 0.9);">
+<span> TA Wishlist </span>
+</div>
+
+  </div>
+
+
+  <div class="container" style="height:125px;background: rgba(90, 20, 20, 0.6)">  
+
+<div onclick="openPage('TA_manage_pages/allTAReport.html')" class="btn btn-four" style="background: rgba(175, 0, 0, 0.9);">
+<span> All TAs Report </span>
+</div>
 
   </div>
