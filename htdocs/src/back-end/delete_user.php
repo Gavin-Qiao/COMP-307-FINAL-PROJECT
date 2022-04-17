@@ -7,7 +7,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
     $userManager = new UserManagement('../../matter/dbf/TA_Management_Website.db');
 
-    $user_id = $userManager->Get_UserID($_POST["username"]);
+    $user_id = $userManager->Get_UserID(Utilities::cleanInput($_POST["username"]));
 
     $deleteErrCode = $userManager->Delete_User($user_id);
 

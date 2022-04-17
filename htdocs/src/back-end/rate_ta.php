@@ -12,11 +12,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     session_start();
 
     $sid = $userManager->Get_UserID($_SESSION["username"]);
-    $tid = $userManager->Get_UserID($_POST["ta_username"]);
-    $course_number = $_POST["course_number"];
-    $term = $_POST["term"];
-    $rating = intval($_POST["rating"]);
-    $message = $_POST["message"];
+    $tid = $userManager->Get_UserID(Utilities::cleanInput($_POST["ta_username"]));
+    $course_number = Utilities::cleanInput($_POST["course_number"]);
+    $term = Utilities::cleanInput($_POST["term"]);
+    $rating = intval(Utilities::cleanInput($_POST["rating"]));
+    $message = Utilities::cleanInput($_POST["message"]);
 
     $rateErrCode = $courseManager->Rate_TA($sid, $tid, $course_number, $term, $rating, $message);
 
@@ -26,7 +26,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     }
     else
     {
-        session_start();
         $_SESSION["errCode"] = $rateErrCode;
         header("Location: ../front-end/?"); // TODO: fill in URL
     }
