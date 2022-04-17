@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<style>
+
+@import 'https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300';
+
+html,body {
+  background-image: url("../../assets/background_photos/mcgill_bckgrnd_1.jpeg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: 100% 100%;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  font-family: 'Open Sans Condensed', sans-serif;
+}
+
+.col {
+  height: 100%;
+}
+
+div[class*=container] {
+  text-align: center;
+  width: 100%;
+  height: 256px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container { background: rgba(155, 0, 0, 0.9);}
+
+/* For mobile phones: */
+[class*="col-"] {
+  width: 100%;
+}
+
+@media only screen and (min-width: 600px) {
+  /* For tablets: */
+  .col-s-1 {width: 8.33%;}
+  .col-s-2 {width: 16.66%;}
+  .col-s-3 {width: 25%;}
+  .col-s-4 {width: 33.33%;}
+  .col-s-5 {width: 41.66%;}
+  .col-s-6 {width: 50%;}
+  .col-s-7 {width: 58.33%;}
+  .col-s-8 {width: 66.66%;}
+  .col-s-9 {width: 75%;}
+  .col-s-10 {width: 83.33%;}
+  .col-s-11 {width: 91.66%;}
+  .col-s-12 {width: 100%;}
+}
+@media only screen and (min-width: 768px) {
+  /* For desktop: These columns define portions rather than positions.*/
+  .col-1 {width: 8.33%;}
+  .col-2 {width: 16.66%;}
+  .col-3 {width: 25%;}
+  .col-4 {width: 33.33%;}
+  .col-5 {width: 41.66%;}
+  .col-6 {width: 50%;}
+  .col-7 {width: 58.33%;}
+  .col-8 {width: 66.66%;}
+  .col-9 {width: 75%;}
+  .col-10 {width: 83.33%;}
+  .col-11 {width: 91.66%;}
+  .col-12 {width: 100%;}
+}
+
+
+/*
+ BUTTON STYLING
+*/
+
+.btn {
+  position: relative;
+  color: white;
+  width: 256px;
+  height: 64px;
+  line-height: 64px;
+  transition: all 0.3s;
+  span {
+    transition: all 0.3s;
+    tranform: scale(1, 1);
+  }
+}
+
+.btn::before, .btn::after {
+  content: '';
+  position: absolute;
+  transition: all 0.3s;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* Red Button */
+
+.btn-four:hover span {
+  transform: scale(1.2, 1.2);
+}
+
+.btn-four::before {
+  opacity: 0;
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(0.1, 0.1);
+}
+
+.btn-four:hover::before {
+  opacity: 1;
+  transform: scale(1, 1);
+}
+
+.btn-four::after {
+  transition: all 0.3s;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.btn-four:hover::after {
+  transform: scale(0, 0);
+  opacity: 0;
+}
+
+
+
+
+.login {
+  overflow: hidden;
+  background-color: white;
+  padding: 40px 30px 30px 30px;
+  border-radius: 10px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  -webkit-transition: -webkit-transform 300ms, box-shadow 300ms;
+  -moz-transition: -moz-transform 300ms, box-shadow 300ms;
+  transition: transform 300ms, box-shadow 300ms;
+  box-shadow: 5px 10px 10px rgba(2, 128, 144, 0.2);
+}
+.login::before, .login::after {
+  content: "";
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-top-left-radius: 40%;
+  border-top-right-radius: 45%;
+  border-bottom-left-radius: 35%;
+  border-bottom-right-radius: 40%;
+  z-index: -1;
+}
+.login::before {
+  left: 40%;
+  bottom: -130%;
+  background-color: rgba(69, 105, 144, 0.15);
+  -webkit-animation: wawes 6s infinite linear;
+  -moz-animation: wawes 6s infinite linear;
+  animation: wawes 6s infinite linear;
+}
+.login::after {
+  left: 35%;
+  bottom: -125%;
+  background-color: rgba(2, 128, 144, 0.2);
+  -webkit-animation: wawes 7s infinite;
+  -moz-animation: wawes 7s infinite;
+  animation: wawes 7s infinite;
+}
+.login > input {
+  font-family: "Asap", sans-serif;
+  display: block;
+  border-radius: 5px;
+  font-size: 16px;
+  background: white;
+  width: 100%;
+  border: 0;
+  padding: 10px 10px;
+  margin: 15px -10px;
+}
+.login > button {
+  font-family: "Asap", sans-serif;
+  cursor: pointer;
+  color: #fff;
+  font-size: 16px;
+  text-transform: uppercase;
+  width: 120px;
+  border: 0;
+  padding: 10px 0;
+  margin-top: 10px;
+  margin-left: -5px;
+  border-radius: 5px;
+  background-color: #f45b69;
+  -webkit-transition: background-color 300ms;
+  -moz-transition: background-color 300ms;
+  transition: background-color 300ms;
+}
+.login > button:hover {
+  background-color: #f24353;
+}
+
+@-webkit-keyframes wawes {
+  from {
+    -webkit-transform: rotate(0);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@-moz-keyframes wawes {
+  from {
+    -moz-transform: rotate(0);
+  }
+  to {
+    -moz-transform: rotate(360deg);
+  }
+}
+@keyframes wawes {
+  from {
+    -webkit-transform: rotate(0);
+    -moz-transform: rotate(0);
+    -ms-transform: rotate(0);
+    -o-transform: rotate(0);
+    transform: rotate(0);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+a {
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.6);
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  font-size: 12px;
+}
+
+input:invalid {
+        border: 2px dashed red;
+}
+
+input:valid {
+        border: 2px solid black;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="col">
+
+<!-- Header --->
+  <div class="container" style="height:100px;background: rgba(255, 255, 255, 0);"> 
+
+	<text style="margin-left:-30px;"> McGill Department of &nbsp &nbsp <br> Computer Science &nbsp &nbsp </text>
+	<img src="../../assets/comp_sci_logo.png" style="height:75px;width:75px;border-radius:50%;" > </img>
+	&nbsp &nbsp TA Management
+
+  </div>
+
+<!-- End of header --->
+
+  <div id="tempID" class="container" style="height:100px ;background: rgba(0, 0, 0, 0);"> 
+  </div>
+
+  <div id="form_container" class="container" style="height:335px;">
+
+<div class="login">
+  <input id="usernameID" type="text" required pattern="[a-zA-Z]+" maxlength="30" minlength="2" name="username">
+  <input id="passwordID" type="password" required pattern="[a-zA-Z0-9]+" maxlength="64" minlength="8" name="pass">
+  <button onClick="afterGoodCreds()" >Register</button>
+<div>
+
+  </div>
+
+</div>
+
+<script>
+
+  function afterGoodCreds()
+  {
+	var usernameVar = document.getElementById("usernameID").value;
+	var passwordVar = document.getElementById("passwordID").value;
+
+	document.getElementById("form_container").innerHTML = "";
+
+// Look at that email regex! Can you believe that? That is incredible.
+// WHAT TO DO: compare names he gave with names here, add two hidden params representing user and pass. that's it.
+
+	document.getElementById("form_container").innerHTML =
+	"<form id="reg_form" action="../../src/back-end/register.php" method="POST" class='login'>" +
+	  "<input id='firstNameID' type='text' required pattern='[a-zA-Z]+' maxlength='64' minlength='1' name='first_name' value='First Name'>" +
+	  "<input id='lastNameID' type='text' required pattern='[a-zA-Z0-9]+' maxlength='64' minlength='1' name='last_name'>" +
+	  "<input id='studentID' type='text' required pattern='[0-9]+' maxlength='9' minlength='9' name='student_id'>" +
+	  "<input id='emailID' type='text' required pattern='^[-!#$%&/'*+/0-9=?A-Z^_a-z{|}~](\.?[-!#$%&/'*+/0-9=?A-Z^_a-z{|}~])*@[a-zA-Z](-?[a-zA-Z0-9])*(\.[a-zA-Z](-?[a-zA-Z0-9])*)+$' maxlength='30' minlength='2' name='email_id'>"  +
+	  "<button>Register</button>" +
+	"</form>";
+
+  }
+
+</script>
+
+</body>
+
+
+</html>
