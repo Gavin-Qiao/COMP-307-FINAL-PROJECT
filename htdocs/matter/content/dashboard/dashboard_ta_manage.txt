@@ -1,7 +1,7 @@
 <!-- TA Management --->
   <div class="container" style="height:150px;background: rgba(90, 20, 20, 0.6)">  
 
-<div onclick="openPage('TA_manage.html')" class="btn btn-four" style="background: rgba(175, 0, 0, 0.9);">
+<div onclick="openPage('TA_manage_choose_class.html')" class="btn btn-four" style="background: rgba(175, 0, 0, 0.9);">
 <span> TA Management </span>
 </div>
  

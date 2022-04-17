@@ -125,6 +125,7 @@ div[class*=container] {
   opacity: 0;
 }
 
+
 </style>
 
 <body>
@@ -132,6 +133,7 @@ div[class*=container] {
 <div class="col">
 
 <!-- Header --->
+
   <div class="container" style="height:100px;background: rgba(255, 255, 255, 0);"> 
 
 	<text style="margin-left:-30px;"> McGill Department of &nbsp &nbsp <br> Computer Science &nbsp &nbsp </text>
@@ -143,14 +145,6 @@ div[class*=container] {
 <!-- End of header --->
 
 <!-- Spacer --->
-<div class="container" style="height:50px ;background: rgba(0, 0, 0, 0);"> </div>
-
-<!-- Rate the TA! --->
-  <div class="container" style="height:450px;background: rgba(0, 100, 20, 0.6);">  
-
-	
-
+  <div class="container" style="height:50px ;background: rgba(0, 0, 0, 0);"> 
   </div>
 
-</body>
-</html>
