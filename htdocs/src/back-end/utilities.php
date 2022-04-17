@@ -48,14 +48,15 @@ class Utilities
     }
 
     /**
-     * Returns a list of courses that a user is registered in as a student
-     * @param string $sid StudentID
+     * Returns a list of courses that a user is registered in as a specific role
+     * @param string $userid User ID
+     * @param string $role Either "ta", "student", or "instructor"
      * @return array
      */
-    static function getCoursesByStudent(string $sid) : array
+    static function getCoursesByRole(string $userid, string $role) : array
     {
         $courseManager = new CourseManagement('../../matter/dbf/TA_Management_Website.db');
 
-        return $courseManager->Get_Courses_By_Role($sid, "student");
+        return $courseManager->Get_Courses_By_Role($userid, $role);
     }
 }
