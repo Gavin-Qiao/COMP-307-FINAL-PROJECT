@@ -1,0 +1,8 @@
+<!-- TA Administration --->
+  <div class="container" style="height:150px;background: rgba(0, 80, 80, 0.6)">  
+
+<div onclick="openPage('TA_admin.html')" class="btn btn-four" style="background: rgba(175, 0, 0, 0.9);">
+<span> TA Administration </span>
+</div>
+ 
+  </div>
