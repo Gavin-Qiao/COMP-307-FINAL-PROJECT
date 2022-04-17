@@ -1,3 +1,4 @@
+<?php $errcode=(isset($_SESSION['errCode']))?$_SESSION['errCode']:''); ?>
 <html>
 
 <style>
@@ -254,8 +255,10 @@ a {
 
 <div class="col">
 
+<img src onerror="getErrorCode()">
+
 <!-- Header --->
-  <div class="container" style="height:150px;background: rgba(255, 255, 255, 0);"> 
+  <div class="container" style="height:100px;background: rgba(255, 255, 255, 0);"> 
 
 	<text style="margin-left:-30px;"> McGill Department of &nbsp &nbsp <br> Computer Science &nbsp &nbsp </text>
 	<img src="assets/comp_sci_logo.png" style="height:75px;width:75px;border-radius:50%;" > </img>
@@ -263,14 +266,14 @@ a {
 
   </div>
 
-<div class="container" style="height:50px ;background: rgba(0, 0, 0, 0);"> <h2 style="color:red;background: rgba(255,255,255,0.75);">  <h2> </div>
-<!-- Error: This is an invalid account. Please try again. --->
-
 <!-- End of header --->
+
+<div class="container" style="height:50px ;background: rgba(0, 0, 0, 0);"> <h2 id="error" style="color:red;background: rgba(255,255,255,0.75);">  <h2> </div>
+<!-- Error: This is an invalid account. Please try again. --->
 
   <div class="container" style="height:335px;">
 
-<form id="form" action="login-result.php" method="GET" class="login">
+<form id="form" action="src/back-end/login.php" method="POST" class="login">
   <input type="text" placeholder="Username" name="username">
   <input type="password" placeholder="Password" name="pass">
   <button type="submit">Login</button>
@@ -289,7 +292,12 @@ a {
 
 </div>
 
-<script>
+<script type="text/javascript">
+  function getErrorCode()
+  {
+	var Error_Code = '<?php echo $errcode;?>';
+	document.getElementById('error').innerHTML = Error_Code;
+  }
 </script>
 
 </body>
