@@ -11,23 +11,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 
     session_start();
 
-    $sid = $userManager->Get_UserID($_SESSION["username"]);
-    $tid = $userManager->Get_UserID($_POST["ta_username"]);
-    $course_number = $_POST["course_number"];
-    $term = $_POST["term"];
-    $rating = intval($_POST["rating"]);
-    $message = $_POST["message"];
+    $course_id = $_POST["course_id"];
+    $instructor_id = $userManager->Get_UserID($_SESSION["username"]);
+    $ta_id = $userManager->Get_UserID($_POST["ta_username"]);
+    $message = $_SESSION["message"];
 
-    $rateErrCode = $courseManager->Rate_TA($sid, $tid, $course_number, $term, $rating, $message);
+    $logErrCode = $courseManager->Instructor_Log($course_id, $instructor_id, $ta_id, $message);
 
-    if ($rateErrCode == 0)
+    if ($logErrCode == 0)
     {
         header("Location: ../front-end/dashboard.php");
     }
     else
     {
         session_start();
-        $_SESSION["errCode"] = $rateErrCode;
+        $_SESSION["errCode"] = $logErrCode;
         header("Location: ../front-end/?"); // TODO: fill in URL
     }
 
