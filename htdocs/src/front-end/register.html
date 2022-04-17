@@ -298,16 +298,17 @@ input:valid {
 	var passwordVar = document.getElementById("passwordID").value;
 
 	document.getElementById("form_container").innerHTML = "";
-
-// Look at that email regex! Can you believe that? That is incredible.
-// WHAT TO DO: compare names he gave with names here, add two hidden params representing user and pass. that's it.
+	document.getElementById("form_container").style = "height:450px;";
+	document.getElementById("tempID").style = "height:75px;";
 
 	document.getElementById("form_container").innerHTML =
-	"<form id="reg_form" action="../../src/back-end/register.php" method="POST" class='login'>" +
+	"<form id='reg_form' action='../../src/back-end/register.php' method='POST' class='login'>" +
+	  "<input name='username' type='hidden' value='"+ usernameVar + "'>" +
+	  "<input name='password' type='hidden' value='"+ passwordVar + "'>" +
 	  "<input id='firstNameID' type='text' required pattern='[a-zA-Z]+' maxlength='64' minlength='1' name='first_name' value='First Name'>" +
-	  "<input id='lastNameID' type='text' required pattern='[a-zA-Z0-9]+' maxlength='64' minlength='1' name='last_name'>" +
-	  "<input id='studentID' type='text' required pattern='[0-9]+' maxlength='9' minlength='9' name='student_id'>" +
-	  "<input id='emailID' type='text' required pattern='^[-!#$%&/'*+/0-9=?A-Z^_a-z{|}~](\.?[-!#$%&/'*+/0-9=?A-Z^_a-z{|}~])*@[a-zA-Z](-?[a-zA-Z0-9])*(\.[a-zA-Z](-?[a-zA-Z0-9])*)+$' maxlength='30' minlength='2' name='email_id'>"  +
+	  "<input id='lastNameID' type='text' required pattern='[a-zA-Z0-9]+' maxlength='64' minlength='1' name='last_name' value='Last Name'>" +
+	  "<input id='studentID' type='text' required pattern='[0-9]+' maxlength='9' minlength='9' name='uder_id' value='Student ID'>" +
+	  "<input id='emailID' type='text' required pattern='^[-!#$%&/'*+/0-9=?A-Z^_a-z{|}~](\.?[-!#$%&/'*+/0-9=?A-Z^_a-z{|}~])*@[a-zA-Z](-?[a-zA-Z0-9])*(\.[a-zA-Z](-?[a-zA-Z0-9])*)+$' maxlength='30' minlength='2' name='email' value='Email'>"  +
 	  "<button>Register</button>" +
 	"</form>";
 
