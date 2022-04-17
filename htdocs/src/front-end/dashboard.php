@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 // This function displays all the lines from some file at path $path.
 function display($path)
 {
@@ -16,9 +18,9 @@ function display($path)
 
 display("../../matter/content/dashboard/dashboard_top.txt");
 
-if (sizeof($_SESSION["student"]=="true")
+if ($_SESSION["student"]=="true")
 {
-	display("../../matter/content/dashboard/dashboard_ta_rate.txt");	
+    display("../../matter/content/dashboard/dashboard_ta_rate.txt");
 }
 else if ($_SESSION["ta"]=="true" || $_SESSION["instructor"]=="true")
 {
