@@ -44,10 +44,12 @@ class DatabaseDriver
         return $this->database_path;
     }
 
+
     /** TODO: CHANGE BACK TO SWITCH (MATCH NOT SUPPORTED ON MIMI)
      * Debug tool to decode error code messages
      * @param int $errCode
      */
+    /*
     function errCode_decoder(int $errCode)
     {
         echo match ($errCode)
@@ -82,5 +84,6 @@ class DatabaseDriver
         };
         echo PHP_EOL;
     }
+    */
 
 }
