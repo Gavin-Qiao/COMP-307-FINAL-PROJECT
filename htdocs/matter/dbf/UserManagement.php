@@ -104,7 +104,9 @@ class UserManagement extends DatabaseDriver
                 }
             }
 
+
             $statement        -> execute([$value]);
+
             return $statement -> fetchColumn();
         }
         catch (Exception $e)

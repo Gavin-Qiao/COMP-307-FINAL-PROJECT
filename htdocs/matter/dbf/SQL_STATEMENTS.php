@@ -93,7 +93,7 @@ class SQL_STATEMENTS
 
     public const FIND_INSTRUCTOR_COURSE        = "SELECT CID FROM REGISTER_INSTRUCTOR_COURSE WHERE IID = ?;";
 
-    public const ADD_COURSE                    = "INSERT INTO COURSE(COURSE_TITLE, COURSE_NUM, TERM_YEAR) VALUES (?, ?, ?);";
+    public const ADD_COURSE                    = "INSERT INTO COURSE(COURSE_TITLE, COURSE_NUM, TERM_YEAR, COURSE_ID) VALUES (?, ?, ?, ?);";
 
     public const UPDATE_COURSE_TITLE           = "UPDATE COURSE SET COURSE_TITLE = ? WHERE COURSE_ID = ?;";
 

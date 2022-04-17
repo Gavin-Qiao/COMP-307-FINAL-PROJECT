@@ -2,8 +2,8 @@
 
 class DatabaseDriver
 {
-    private string $database_path;
-    private PDO    $connection;
+    private $database_path;
+    private $connection;
 
     function __construct($database_path)
     {

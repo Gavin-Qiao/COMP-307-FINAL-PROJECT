@@ -232,7 +232,7 @@ class CourseManagement extends DatabaseDriver
             $statement         = $conn->prepare($statement_library::ADD_COURSE);
 
             // Execute
-            $statement->execute([$title, $num, $term]);
+            $statement->execute([$title, $num, $term, $this->Encode_CourseID($term, $num)]);
             return 0;
         }
         catch (Exception $e)
