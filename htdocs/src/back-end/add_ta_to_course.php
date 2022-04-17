@@ -9,10 +9,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     $userManager = new UserManagement('../../matter/dbf/TA_Management_Website.db');
     $courseManager = new CourseManagement('../../matter/dbf/TA_Management_Website.db');
 
-    $user_id = $userManager->Get_UserID($_POST["username"]);
-    $role = $_POST["role"];
-    $course_num = $_POST["number"];
-    $term = $_POST["term"];
+    $user_id = $userManager->Get_UserID(Utilities::cleanInput($_POST["username"]));
+    $role = Utilities::cleanInput($_POST["role"]);
+    $course_num = Utilities::cleanInput($_POST["number"]);
+    $term = Utilities::cleanInput($_POST["term"]);
 
     $addErrCode = $courseManager->Register_To_Course($user_id, $role, $course_num, $term);
 
