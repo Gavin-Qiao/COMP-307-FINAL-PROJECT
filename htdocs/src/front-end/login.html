@@ -268,7 +268,7 @@ a {
 
 <!-- End of header --->
 
-<div class="container" style="height:50px ;background: rgba(0, 0, 0, 0);"> <h2 id="error" style="color:red;background: rgba(255,255,255,0.75);">  <h2> </div>
+<div class="container" style="height:100px ;background: rgba(0, 0, 0, 0);"> <h2 id="error" style="color:red;background: rgba(255,255,255,0.75);">  <h2> </div>
 <!-- Error: This is an invalid account. Please try again. --->
 
   <div class="container" style="height:335px;">
@@ -284,7 +284,7 @@ a {
 
   <div class="container" style="margin-left:37%; width:25%; margin-top:25px; height:100px;background: rgba(0, 0, 0, 0);">  
 
-<div class="btn btn-four" style="background: rgba(175, 0, 0, 0.9);">
+<div onclick="openReg()" class="btn btn-four" style="background: rgba(175, 0, 0, 0.9);">
 <span> REGISTER </span>
 </div>
  
@@ -297,6 +297,11 @@ a {
   {
 	var Error_Code = '<?php echo $errcode;?>';
 	document.getElementById('error').innerHTML = Error_Code;
+  }
+
+  function openReg()
+  {
+	window.location.href = "src/front-end/register.html";
   }
 </script>
 
