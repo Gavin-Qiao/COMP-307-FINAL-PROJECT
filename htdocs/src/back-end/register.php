@@ -16,16 +16,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 
     $registerErrCode = $userManager->Register_User($username, $password, $userID, $first_name, $last_name, $email);
 
+    session_start();
     if ($registerErrCode == 0)
     {
-        header("Location: ../../index.php");
+        $registerAsErrCode = $userManager->Register_As("student", $userID);
+        if ($registerAsErrCode == 0)
+        {
+            header("Location: ../../index.php");
+        }
+        else
+        {
+            $_SESSION["errCode"] = $registerAsErrCode;
+            header("Location: ../front-end/register.html");
+        }
     }
     else
     {
-        session_start();
         $_SESSION["errCode"] = $registerErrCode;
-        echo $registerErrCode;
-//        header("Location: ../front-end/register.html");
+        header("Location: ../front-end/register.html");
     }
 
     die();
