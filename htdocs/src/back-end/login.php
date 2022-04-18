@@ -26,23 +26,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         $_SESSION["sysop"] = "false";
         $_SESSION["admin"] = "false";
 
-        if ($courseManager->Verify_Identity("student", $userid))
+        if ($courseManager->Verify_Identity("student", $userid) == 0)
         {
             $_SESSION["student"] = "true";
         }
-        if ($courseManager->Verify_Identity("ta", $userid))
+        if ($courseManager->Verify_Identity("ta", $userid) == 0)
         {
             $_SESSION["ta"] = "true";
         }
-        if ($courseManager->Verify_Identity("instructor", $userid))
+        if ($courseManager->Verify_Identity("instructor", $userid) == 0)
         {
             $_SESSION["instructor"] = "true";
         }
-        if ($courseManager->Verify_Identity("sysop", $userid))
+        if ($courseManager->Verify_Identity("sysop", $userid) == 0)
         {
             $_SESSION["sysop"] = "true";
         }
-        if ($courseManager->Verify_Identity("admin", $userid))
+        if ($courseManager->Verify_Identity("admin", $userid) == 0)
         {
             $_SESSION["admin"] = "true";
         }
