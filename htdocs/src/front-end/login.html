@@ -296,8 +296,7 @@ a {
   function getErrorCode()
   {
 		var Error_Code = '<? session_start(); $errcode=$_SESSION['errCode'];  php echo $errcode;?>';
-		if (Error_Code=="") ;
-		else document.getElementById('error').innerHTML = "Error " + Error_Code + ": There was an error logging in.";
+		if (!(Error_Code=="")) document.getElementById('error').innerHTML = "Error " + Error_Code + ": There was an error logging in.";
   }
 
   function openReg()
