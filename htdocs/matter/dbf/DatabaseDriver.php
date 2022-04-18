@@ -78,8 +78,11 @@ class DatabaseDriver
             case -21     : return "Incorrect education choice: should be between 'grad', 'ugrad' and 'other'" .PHP_EOL;
             case -22     : return "Location too long! Should be less than 256 characters"                     .PHP_EOL;
             case -23     : return "Phone number too long! Should be less than 30 characters"                  .PHP_EOL;
-            case -24     : return "Negative degree/hour"                                                      .PHP_EOL;
+            case -24     : return "Incorrect degree/hour value: should be non-negative integer"               .PHP_EOL;
             case -25     : return "Note too long! Should be less than 1024 characters"                        .PHP_EOL;
+            case -26     : return "Incorrect boolean value!"                                                  .PHP_EOL;
+            case -27     : return "Office Hours information too long! Should be less than 64 characters."     .PHP_EOL;
+            case -28     : return "Duties description too long! Should be less than 256 characters."          .PHP_EOL;
             default      : return "Unknown Error Code!"                                                       .PHP_EOL;
         }
     }

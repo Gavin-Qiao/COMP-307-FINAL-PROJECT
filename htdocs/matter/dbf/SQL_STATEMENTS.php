@@ -23,56 +23,74 @@ class SQL_STATEMENTS
     ==========================================
      */
 
-    public const GET_ID_BY_USERNAME      = "SELECT USER_ID  FROM USER WHERE USER_NAME = ?;";
+    public const GET_ID_BY_USERNAME             = "SELECT USER_ID  FROM USER WHERE USER_NAME = ?;";
 
-    public const COUNT_USER_EMAIL        = "SELECT COUNT(*) FROM USER WHERE EMAIL     = ?;";
+    public const COUNT_USER_EMAIL               = "SELECT COUNT(*) FROM USER WHERE EMAIL     = ?;";
 
-    public const COUNT_USERNAME          = "SELECT COUNT(*) FROM USER WHERE USER_NAME = ?;";
+    public const COUNT_USERNAME                 = "SELECT COUNT(*) FROM USER WHERE USER_NAME = ?;";
 
-    public const COUNT_USER_ID           = "SELECT COUNT(*) FROM USER WHERE USER_ID   = ?;";
+    public const COUNT_USER_ID                  = "SELECT COUNT(*) FROM USER WHERE USER_ID   = ?;";
 
-    public const REGISTER_USER           = "INSERT INTO 
-                                            USER(USER_NAME, PASSWORD, USER_ID, FIRST_NAME, LAST_NAME, EMAIL)
-                                            VALUES(?, ?, ?, ?, ?, ?);";
+    public const REGISTER_USER                  = "INSERT INTO 
+                                                   USER(USER_NAME, PASSWORD, USER_ID, FIRST_NAME, LAST_NAME, EMAIL)
+                                                   VALUES(?, ?, ?, ?, ?, ?);";
 
-    public const VERIFY_LOGIN            = "SELECT COUNT(*) FROM USER WHERE USER_NAME = ? AND PASSWORD = ?;";
+    public const VERIFY_LOGIN                   = "SELECT COUNT(*) FROM USER WHERE USER_NAME = ? AND PASSWORD = ?;";
 
-    public const GET_USER_INFO           = "SELECT USER_NAME, USER_ID, FIRST_NAME, LAST_NAME, EMAIL 
-                                            FROM USER ORDER BY FIRST_NAME;";
+    public const GET_USER_INFO                  = "SELECT USER_NAME, USER_ID, FIRST_NAME, LAST_NAME, EMAIL 
+                                                   FROM USER ORDER BY FIRST_NAME;";
 
-    public const UPDATE_ID               = "UPDATE USER SET USER_ID    = ? WHERE USER_ID = ?;";
+    public const UPDATE_ID                      = "UPDATE USER SET USER_ID    = ? WHERE USER_ID = ?;";
 
-    public const UPDATE_USERNAME         = "UPDATE USER SET USER_NAME  = ? WHERE USER_ID = ?;";
+    public const UPDATE_USERNAME                = "UPDATE USER SET USER_NAME  = ? WHERE USER_ID = ?;";
 
-    public const UPDATE_PASSWORD         = "UPDATE USER SET PASSWORD   = ? WHERE USER_ID = ?;";
+    public const UPDATE_PASSWORD                = "UPDATE USER SET PASSWORD   = ? WHERE USER_ID = ?;";
 
-    public const UPDATE_FIRSTNAME        = "UPDATE USER SET FIRST_NAME = ? WHERE USER_ID = ?;";
+    public const UPDATE_FIRSTNAME               = "UPDATE USER SET FIRST_NAME = ? WHERE USER_ID = ?;";
 
-    public const UPDATE_LASTNAME         = "UPDATE USER SET LAST_NAME  = ? WHERE USER_ID = ?;";
+    public const UPDATE_LASTNAME                = "UPDATE USER SET LAST_NAME  = ? WHERE USER_ID = ?;";
 
-    public const UPDATE_EMAIL            = "UPDATE USER SET EMAIL      = ? WHERE USER_ID = ?;";
+    public const UPDATE_EMAIL                   = "UPDATE USER SET EMAIL      = ? WHERE USER_ID = ?;";
 
-    public const COUNT_USER_STUDENT      = "SELECT COUNT(*) FROM USER U JOIN STUDENT    S on U.USER_ID = S.ID WHERE S.ID = ?;";
+    public const COUNT_USER_STUDENT             = "SELECT COUNT(*) FROM USER U JOIN STUDENT    S on U.USER_ID = S.ID WHERE S.ID = ?;";
 
-    public const COUNT_USER_TA           = "SELECT COUNT(*) FROM USER U JOIN TA         T on U.USER_ID = T.ID WHERE T.ID = ?;";
+    public const COUNT_USER_TA                  = "SELECT COUNT(*) FROM USER U JOIN TA         T on U.USER_ID = T.ID WHERE T.ID = ?;";
 
-    public const COUNT_USER_INSTRUCTOR   = "SELECT COUNT(*) FROM USER U JOIN INSTRUCTOR I on U.USER_ID = I.ID WHERE I.ID = ?;";
+    public const COUNT_USER_INSTRUCTOR          = "SELECT COUNT(*) FROM USER U JOIN INSTRUCTOR I on U.USER_ID = I.ID WHERE I.ID = ?;";
 
-    public const COUNT_USER_SYSOP        = "SELECT COUNT(*) FROM USER U JOIN SYSOP      S on U.USER_ID = S.ID WHERE S.ID = ?;";
+    public const COUNT_USER_SYSOP               = "SELECT COUNT(*) FROM USER U JOIN SYSOP      S on U.USER_ID = S.ID WHERE S.ID = ?;";
 
-    public const COUNT_USER_ADMIN        = "SELECT COUNT(*) FROM USER U JOIN ADMIN      A on U.USER_ID = A.ID WHERE A.ID = ?;";
+    public const COUNT_USER_ADMIN               = "SELECT COUNT(*) FROM USER U JOIN ADMIN      A on U.USER_ID = A.ID WHERE A.ID = ?;";
 
-    public const REGISTER_AS_STUDENT     = "INSERT INTO STUDENT   (ID) VALUES (?)";
+    public const REGISTER_AS_STUDENT            = "INSERT INTO STUDENT   (ID) VALUES (?)";
 
-    public const REGISTER_AS_TA          = "INSERT INTO TA        (ID) VALUES (?)";
+    public const REGISTER_AS_TA                 = "INSERT INTO TA        (ID) VALUES (?)";
 
-    public const REGISTER_AS_INSTRUCTOR  = "INSERT INTO INSTRUCTOR(ID) VALUES (?)";
+    public const REGISTER_AS_INSTRUCTOR         = "INSERT INTO INSTRUCTOR(ID) VALUES (?)";
 
-    public const REGISTER_AS_SYSOP       = "INSERT INTO SYSOP     (ID) VALUES (?);";
+    public const REGISTER_AS_SYSOP              = "INSERT INTO SYSOP     (ID) VALUES (?);";
 
-    public const REGISTER_AS_ADMIN       = "INSERT INTO ADMIN     (ID) VALUES (?);";
+    public const REGISTER_AS_ADMIN              = "INSERT INTO ADMIN     (ID) VALUES (?);";
 
-    public const DELETE_USER             = "DELETE FROM USER WHERE USER_ID = ?;";
+    public const UPDATE_TA_EDUCATION            = "UPDATE TA SET EDUCATION            = ? WHERE ID = ?;";
+
+    public const UPDATE_TA_SUPERVISOR           = "UPDATE TA SET SUPERVISOR           = ? WHERE ID = ?;";
+
+    public const UPDATE_TA_PRIORITY             = "UPDATE TA SET PRIORITY             = ? WHERE ID = ?;";
+
+    public const UPDATE_TA_LOCATION             = "UPDATE TA SET LOCATION             = ? WHERE ID = ?;";
+
+    public const UPDATE_TA_PHONE                = "UPDATE TA SET PHONE                = ? WHERE ID = ?;";
+
+    public const UPDATE_TA_DEGREE               = "UPDATE TA SET DEGREE               = ? WHERE ID = ?;";
+
+    public const UPDATE_TA_OPEN_TO_OTHER_COURSE = "UPDATE TA SET OPEN_TO_OTHER_COURSE = ? WHERE ID = ?;";
+
+    public const UPDATE_TA_OFFICE_HOURS         = "UPDATE TA SET OFFICE_HOURS         = ? WHERE ID = ?;";
+
+    public const UPDATE_TA_DUTIES               = "UPDATE TA SET DUTIES               = ? WHERE ID = ?;";
+
+    public const DELETE_USER                    = "DELETE FROM USER WHERE USER_ID = ?;";
 
     /*
     ============================================================

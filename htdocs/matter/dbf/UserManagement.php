@@ -589,4 +589,138 @@ class UserManagement extends DatabaseDriver
             return -11;
         }
     }
+
+
+    /** Update TA information
+     * @param  String $userID
+     * @param  String $property
+     * <ul>
+     * <li> education   : 'grad', 'ugrad' or 'other'         </li>
+     * <li> supervisor  : full name less than 512 characters </li>
+     * <li> priority    : boolean                            </li>
+     * <li> location    : string less than 256 characters    </li>
+     * <li> phone       : string under 30 characters         </li>
+     * <li> degree      : non-negative integer               </li>
+     * <li> open        : boolean                            </li>
+     * <li> office_hour : string less than 64 characters     </li>
+     * <li> duties      : string less than 256 characters    </li>
+     * </ul>
+     * @param  mixed  $newValue
+     * @return int
+     * <p>errCode: Result of verifying                                                    </p>
+     * <ul>
+     * <li> 0:  Success                                                                   </li>
+     * <li>-5:  Incorrect userID format: should be 9 digits                               </li>
+     * <li>-8:  Supervisor name too long                                                  </li>
+     * <li>-11: Unknown SQL error or unknown property. (See echo)                         </li>
+     * <li>-12: The given ID isn't a TA!                                                  </li>
+     * <li>-21: Incorrect education choice: should be between 'grad', 'ugrad' and 'other' </li>
+     * <li>-22: Location too long! Should be less than 256 characters                     </li>
+     * <li>-23: Phone number too long! Should be less than 30 characters                  </li>
+     * <li>-24: Incorrect degree/hour value: should be non-negative integer               </li>
+     * <li>-26: Incorrect boolean value!                                                  </li>
+     * <li>-27: Office Hours information too long! Should be less than 64 characters.     </li>
+     * <li>-28: Duties description too long! Should be less than 256 characters.          </li>
+     * </ul>
+     */
+    function Update_TA_Info(String $userID, String $property, mixed $newValue) : int
+    {
+        // Verify role
+        $cmt = new CourseManagement($this->get_database_path());
+        $errCode = $cmt->Verify_Identity("ta", $userID);
+
+        if ($errCode != 0) return $errCode; // Identity mismatch
+
+        try
+        {
+            // Create connection
+            $conn = $this->get_connection();
+
+            // Create statement
+            $statement_library = new SQL_STATEMENTS();
+
+            switch ($property)
+            {
+                case "userID" :
+                {
+                    return $this->Update_User($userID, "id", $newValue);
+                }
+                case "education" :
+                {
+                    if (!preg_match("/[grad]|[ugrad]|[other]/", $newValue))
+                        return -21; // Incorrect education choice: should be between 'grad', 'ugrad' and 'other'
+                    $statement = $conn->prepare($statement_library::UPDATE_TA_EDUCATION);
+                    break;
+                }
+                case "supervisor" :
+                {
+                    if (strlen($newValue) > 512)
+                        return -8; // Supervisor name too long
+                    $statement = $conn->prepare($statement_library::UPDATE_TA_SUPERVISOR);
+                    break;
+                }
+                case "priority" :
+                {
+                    if (gettype($newValue) != "boolean")
+                        return -26; //Incorrect boolean value!
+                    $statement = $conn->prepare($statement_library::UPDATE_TA_PRIORITY);
+                    break;
+                }
+                case "location":
+                {
+                    if (strlen($newValue) > 256)
+                        return -22; // Location too long! Should be less than 256 characters
+                    $statement = $conn->prepare($statement_library::UPDATE_TA_LOCATION);
+                    break;
+                }
+                case "phone":
+                {
+                    if (strlen($newValue) > 30)
+                        return -23; // Phone number too long! Should be less than 30 characters
+                    $statement = $conn->prepare($statement_library::UPDATE_TA_PHONE);
+                    break;
+                }
+                case "degree":
+                {
+                    if (gettype($newValue) != "integer" || $newValue < 0)
+                        return -24; // Incorrect degree/hour value: should be non-negative integer
+                    $statement = $conn->prepare($statement_library::UPDATE_TA_DEGREE);
+                    break;
+                }
+                case "open":
+                {
+                    if (gettype($newValue) != "boolean")
+                        return -26; //Incorrect boolean value!
+                    $statement = $conn->prepare($statement_library::UPDATE_TA_OPEN_TO_OTHER_COURSE);
+                    break;
+                }
+                case "office_hour" :
+                {
+                    if (strlen($newValue) > 64)
+                        return -27; // Office Hours information too long! Should be less than 64 characters
+                    $statement = $conn->prepare($statement_library::UPDATE_TA_OFFICE_HOURS);
+                    break;
+                }
+                case "duties" :
+                {
+                    if (strlen($newValue) > 256)
+                        return -28; // Duties description too long! Should be less than 256 characters.
+                    $statement = $conn->prepare($statement_library::UPDATE_TA_DUTIES);
+                    break;
+                }
+                default :
+                {
+                    echo "Unknown property: ".$property.PHP_EOL;
+                    return -11;
+                }
+            }
+            $statement->execute([$newValue, $userID]);
+            return 0;
+        }
+        catch (Exception $e)
+        {
+            echo $e->getMessage();
+            return -11;
+        }
+    }
 }
