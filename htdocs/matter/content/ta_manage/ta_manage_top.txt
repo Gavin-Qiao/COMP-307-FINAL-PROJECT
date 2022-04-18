@@ -145,7 +145,12 @@ div[class*=container] {
 <!-- End of header --->
 
 <!-- Spacer --->
-  <div class="container" style="height:50px ;background: rgba(0, 0, 0, 0);"> 
+    <div class="container" style="height:100px ;background: rgba(0, 0, 0, 0);"> 
+
+<div onclick="openPage('../back-end/logout.php')" class="btn btn-four" style="background: rgba(175, 0, 0, 0.9);">
+<span> Log Out </span>
+</div>
+
   </div>
 
 <!-- These two buttons will be available for both teachers and TAs --->
