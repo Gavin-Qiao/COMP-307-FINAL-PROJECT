@@ -1,4 +1,4 @@
-<?php $errcode=(isset($_SESSION['errCode']))?$_SESSION['errCode']:''); ?>
+<!DOCTYPE html>
 <html>
 
 <style>
@@ -292,11 +292,12 @@ a {
 
 </div>
 
-<script type="text/javascript">
+<script>
   function getErrorCode()
   {
-	var Error_Code = '<?php echo $errcode;?>';
-	document.getElementById('error').innerHTML = Error_Code;
+		var Error_Code = '<? session_start(); $errcode=$_SESSION['errCode'];  php echo $errcode;?>';
+		if (Error_Code=="") ;
+		else document.getElementById('error').innerHTML = "Error " + Error_Code + ": There was an error logging in.";
   }
 
   function openReg()
