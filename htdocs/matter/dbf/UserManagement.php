@@ -628,6 +628,7 @@ class UserManagement extends DatabaseDriver
         // Verify role
         $cmt = new CourseManagement($this->get_database_path());
         $errCode = $cmt->Verify_Identity("ta", $userID);
+        unset($cmt);
 
         if ($errCode != 0) return $errCode; // Identity mismatch
 
@@ -722,5 +723,71 @@ class UserManagement extends DatabaseDriver
             echo $e->getMessage();
             return -11;
         }
+    }
+
+
+    /**
+     * Get TA information by userID
+     * @param  String $userID
+     * @return array
+     * [                                                  <br>
+     * &emsp;[id          ] => userID                     <br>
+     * &emsp;[education   ] => 'grad', 'ugrad' or 'other' <br>
+     * &emsp;[supervisor  ] => full name                  <br>
+     * &emsp;[priority    ] => boolean                    <br>
+     * &emsp;[location    ] => string                     <br>
+     * &emsp;[phone       ] => string                     <br>
+     * &emsp;[degree      ] => integer                    <br>
+     * &emsp;[open        ] => boolean                    <br>
+     * &emsp;[office_hour ] => string                     <br>
+     * &emsp;[duties      ] => string                     <br>
+     * ]
+     * <p> []: no record found or some exceptions </p>
+     */
+    function Get_TA_Info(String $userID) : array
+    {
+        // Verify role
+        $cmt = new CourseManagement($this->get_database_path());
+        $errCode = $cmt->Verify_Identity("ta", $userID);
+        unset($cmt);
+
+        if ($errCode != 0) return []; // Identity mismatch
+
+        try
+        {
+            // Create connection
+            $conn = $this->get_connection();
+
+            // Create statement
+            $statement_library = new SQL_STATEMENTS();
+            $statement         = $conn->prepare($statement_library::GET_TA_INFO);
+
+            $statement->execute([$userID]);
+
+            $TAs = [];
+            while ($row = $statement->fetch(\PDO::FETCH_ASSOC))
+            {
+                $TAs[] =
+                    [
+                        'id'          => $row['ID'                  ],
+                        'education'   => $row['EDUCATION'           ],
+                        'supervisor'  => $row['SUPERVISOR'          ],
+                        'priority'    => $row['PRIORITY'            ],
+                        'location'    => $row['LOCATION'            ],
+                        'phone'       => $row['PHONE'               ],
+                        'degree'      => $row['DEGREE'              ],
+                        'open'        => $row['OPEN_TO_OTHER_COURSE'],
+                        'office_hour' => $row['OFFICE_HOURS'        ],
+                        'duties'      => $row['DUTIES'              ]
+                    ];
+            }
+            return $TAs;
+        }
+        catch (Exception $e)
+        {
+            echo $e->getMessage();
+            return [];
+        }
+
     }
 }

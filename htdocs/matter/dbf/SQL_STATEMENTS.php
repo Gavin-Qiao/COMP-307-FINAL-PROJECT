@@ -40,6 +40,8 @@ class SQL_STATEMENTS
     public const GET_USER_INFO                  = "SELECT USER_NAME, USER_ID, FIRST_NAME, LAST_NAME, EMAIL 
                                                    FROM USER ORDER BY FIRST_NAME;";
 
+    public const GET_TA_INFO                    = "SELECT * FROM TA WHERE ID = ?;";
+
     public const UPDATE_ID                      = "UPDATE USER SET USER_ID    = ? WHERE USER_ID = ?;";
 
     public const UPDATE_USERNAME                = "UPDATE USER SET USER_NAME  = ? WHERE USER_ID = ?;";
