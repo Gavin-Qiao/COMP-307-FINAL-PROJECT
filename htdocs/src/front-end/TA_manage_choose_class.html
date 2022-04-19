@@ -276,9 +276,9 @@ a {
   </div>
 
 <!-- Body --->
-  <div id="dropdown_form" class="container" style="height:400px;background: rgba(90, 20, 20, 0.6)">  
+  <div id="form" class="container" style="height:400px;background: rgba(90, 20, 20, 0.6)">  
 
-<form id="form" action="" method="POST" class="login">
+<form action="" method="POST" class="login">
 	<select name="course" id="course-select">
 	  <option value=""> --Please choose an option--</option>
 	</select> <br>
@@ -294,39 +294,14 @@ a {
 function populateForm()
 {
 
-	var formString = "<form id='form' action='TA_manage_frontend.php' method='POST' class='login'>
-				<select name='course' id='course-select'>" + "<option value=''> --Please choose an option--</option>";
+	var xml = new XMLHttpRequest();
+	xml.onreadystatechange = function()     {
 
-	formString += <?php
+		if (this.readyState==4 && this.status == 200) 
+		{ document.getElementById("form").innerHTML = this.responseText; }
+		else { document.getElementById("form").innerHTML = "<h1>no success:" + this.readyState + this.status +"</h1>";}
 
-		require_once '../back-end/utilities.php';
-		session_start();
-
-		$toReturn = "";
-
-		$ta_courses = [];
-		$prof_courses = [];
-		if ($_SESSION["ta"]=="true") $ta_courses = Utilities::getCoursesByRole("$_SESSION['username']","ta");
-		if ($_SESSION["instructor"]=="true") $prof_courses = Utilities::getCoursesByRole("$_SESSION['username']","instructor");
-	
-		foreach ($ta_courses as $ta_course)
-		{
-			$toReturn += "<option value='" + $ta_course + "'>" + $ta_course + "</option>";		
-		}	
-		foreach ($prof_courses as $prof_course)
-		{
-			$toReturn += "<option value='" + $prof_course + "'>" + $prof_course + "</option>";		
-		}
-
-
-		echo $toReturn;
-	?>
-
-	formString += 	"</select> <br>
-			<button type='submit'>Select</button>
-		</form>";
-	document.getElementById("dropdown_form").innerHTML = formString;
-
+						};
 }
 
 </script>

@@ -13,7 +13,7 @@
 	foreach ($TA_list as $key) 
 	{ $toReturn += '<option value="">' + $key + '</option>'  ; }
 	
-	toReturn += '</select> <br> <button onclick="">Select TA</button> </div>';
+	$toReturn += '</select> <br> <button onclick="">Select TA</button> </div>';
 
 	//'<option value=""> Hello there from php </option> '  ;
 //}
